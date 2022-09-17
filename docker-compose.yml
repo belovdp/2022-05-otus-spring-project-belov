@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  keycloak-db:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks:
+      - local-keycloak
+
+  keycloak:
+    depends_on:
+      - keycloak-db
+    container_name: local_keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak-db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: password
+      KEYCLOAK_IMPORT: "/tmp/export.json"
+    volumes:
+      - "./keycloak/export.json:/tmp/export.json"
+    image: jboss/keycloak:16.1.1
+    ports:
+      - "127.0.0.1:8080:8080"
+    restart: unless-stopped
+    networks:
+      - local-keycloak
+
+networks:
+  local-keycloak:
