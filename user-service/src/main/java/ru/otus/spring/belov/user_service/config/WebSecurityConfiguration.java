@@ -8,16 +8,16 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * Подключение keycloak
@@ -25,6 +25,15 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/swagger-ui.html")
+                .antMatchers("/swagger-ui/**")
+                .antMatchers("/webjars/springfox-swagger-ui/**")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/v3/api-docs/**");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -39,38 +48,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter());
+        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            var delegate = new JwtGrantedAuthoritiesConverter();
+            var grantedAuthorities = delegate.convert(jwt);
+            ofNullable((JSONObject) jwt.getClaim("resource_access"))
+                    .map(resourceAccess -> (JSONObject) resourceAccess.get("shop-app"))
+                    .map(shopApp -> (JSONArray) shopApp.get("roles"))
+                    .map(roles -> roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList()))
+                    .ifPresent(grantedAuthorities::addAll);
+            return grantedAuthorities;
+        });
         return jwtAuthenticationConverter;
-    }
-
-    @Bean
-    public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
-        JwtGrantedAuthoritiesConverter delegate = new JwtGrantedAuthoritiesConverter();
-
-        return new Converter<>() {
-            @Override
-            public Collection<GrantedAuthority> convert(Jwt jwt) {
-                Collection<GrantedAuthority> grantedAuthorities = delegate.convert(jwt);
-
-                if (jwt.getClaim("resource_access") == null) {
-                    return grantedAuthorities;
-                }
-                JSONObject resourceAccess = jwt.getClaim("resource_access");
-                if (resourceAccess.get("shop-app") == null) {
-                    return grantedAuthorities;
-                }
-                JSONObject shopApp = (JSONObject) resourceAccess.get("shop-app");
-                if (shopApp.get("roles") == null) {
-                    return grantedAuthorities;
-                }
-                JSONArray roles = (JSONArray) shopApp.get("roles");
-
-                final List<SimpleGrantedAuthority> keycloakAuthorities = roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList());
-                grantedAuthorities.addAll(keycloakAuthorities);
-
-                return grantedAuthorities;
-            }
-        };
     }
 }
