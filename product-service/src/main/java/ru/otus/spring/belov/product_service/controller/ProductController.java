@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Контроллер для работы с пользователями
+ * Контроллер для работы с продуктами
  */
 @RestController
 @SecurityRequirement(name = "bearerAuth")
-public class UserController {
+public class ProductController {
 
 
     @GetMapping("/test")
