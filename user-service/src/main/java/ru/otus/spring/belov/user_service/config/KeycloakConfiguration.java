@@ -46,9 +46,11 @@ public class KeycloakConfiguration {
     @Bean
     @Primary
     public org.keycloak.authorization.client.Configuration keycloakAuthConfiguration() {
+        var credentials = new HashMap<>(kcProperties.getCredentials());
+        credentials.put("grant_type", "password");
         return new org.keycloak.authorization.client.Configuration(
                 kcProperties.getAuthServerUrl(), kcProperties.getRealm(),
-                kcProperties.getResource(), kcProperties.getCredentials(), null);
+                kcProperties.getResource(), credentials, null);
     }
 
     /**

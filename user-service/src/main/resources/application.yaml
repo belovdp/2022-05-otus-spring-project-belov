@@ -12,6 +12,5 @@ keycloak:
   resource: shop-app
   credentials:
     secret: WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI
-    grant_type: password
   use-resource-role-mappings: true
   bearer-only: true
