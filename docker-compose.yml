@@ -29,9 +29,26 @@ services:
     volumes:
       - "./keycloak/export.json:/tmp/export.json"
     image: jboss/keycloak:16.1.1
-    ports:
-      - "127.0.0.1:8080:8080"
     restart: unless-stopped
+    networks:
+      - local-keycloak
+
+  app:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    image: belovdp/user-service
+    container_name: user-service
+    privileged: true
+    depends_on:
+      - keycloak
+    environment:
+      KC_URL: http://keycloak:8080/auth
+      KC_REALM: shop
+      KC_CLIENT_ID: shop-app
+      KC_SECRET: WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI
+    ports:
+      - "8081:8081"
     networks:
       - local-keycloak
 

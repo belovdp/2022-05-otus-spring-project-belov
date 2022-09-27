@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Группы пользователей
+ * TODO брать id отсюда
  */
 @RequiredArgsConstructor
 @Getter

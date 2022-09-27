@@ -7,11 +7,11 @@ spring:
       basePath: /
 
 keycloak:
-  realm: shop
-  auth-server-url: http://localhost:8080/auth
-  resource: shop-app
+  realm: ${kc.realm:shop}
+  auth-server-url: ${kc.url:http://localhost:8080/auth}
+  resource: ${kc.client_id:shop-app}
   credentials:
-    secret: WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI
+    secret: ${kc.secret:WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI}
   use-resource-role-mappings: true
   bearer-only: true
 

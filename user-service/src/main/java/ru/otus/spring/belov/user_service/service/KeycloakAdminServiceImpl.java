@@ -36,7 +36,6 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService {
 
     @Override
     public TokenInfoResponse registerUser(RegisterUserRequest registerUserRequest) {
-//        keycloak.tokenManager().getAccessToken();
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
         user.setUsername(registerUserRequest.getEmail());
