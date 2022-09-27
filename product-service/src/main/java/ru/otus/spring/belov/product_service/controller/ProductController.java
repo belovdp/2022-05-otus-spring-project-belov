@@ -1,4 +1,4 @@
-package ru.otus.spring.belov.user_service.controller;
+package ru.otus.spring.belov.product_service.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.GetMapping;

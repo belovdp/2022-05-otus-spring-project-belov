@@ -1,4 +1,4 @@
-package ru.otus.spring.belov.user_service.config;
+package ru.otus.spring.belov.product_service.config;
 
 import com.nimbusds.jose.shaded.json.JSONArray;
 import com.nimbusds.jose.shaded.json.JSONObject;

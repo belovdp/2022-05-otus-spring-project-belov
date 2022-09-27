@@ -14,3 +14,9 @@ keycloak:
     secret: WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI
   use-resource-role-mappings: true
   bearer-only: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
