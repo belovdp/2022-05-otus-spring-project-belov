@@ -37,9 +37,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // TODO подключить секьюрность
         http
                 .authorizeRequests(authorizeRequests -> authorizeRequests
-                        .anyRequest().hasAnyRole("ADMIN"))
+                        .anyRequest().permitAll())
                 .oauth2ResourceServer(resourceServerConfigurer -> resourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))

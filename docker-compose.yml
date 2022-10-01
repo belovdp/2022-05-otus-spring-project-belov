@@ -8,8 +8,8 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
-    ports:
-      - "127.0.0.1:5432:5432"
+    #ports:
+    #  - "127.0.0.1:5432:5432"
     networks:
       - local-keycloak
 
@@ -30,6 +30,8 @@ services:
       - "./keycloak/export.json:/tmp/export.json"
     image: jboss/keycloak:16.1.1
     restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
     networks:
       - local-keycloak
 

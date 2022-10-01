@@ -14,9 +14,4 @@ import java.util.List;
 public class ProductController {
 
 
-    @GetMapping("/test")
-    public List<String> getAuthors() {
-        // TODO
-        return List.of("sdf", "fg");
-    }
 }
