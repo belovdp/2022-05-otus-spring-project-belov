@@ -2,17 +2,13 @@ package ru.otus.spring.belov.product_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
 
 /**
- * Категория продуктов
+ * Запрос на создание/обновление категории
  */
 @AllArgsConstructor
-@Setter
 @Getter
-public class CategoriesTreeItem {
+public class SaveCategoryRequest {
 
     /** Идентификатор */
     private Long id;
@@ -26,6 +22,6 @@ public class CategoriesTreeItem {
     private boolean published;
     /** Индекс сортировки */
     private int sortIndex;
-    /** Дочерние категории */
-    private List<CategoriesTreeItem> childs;
+    /** Идентификатор родительской категории */
+    private Long parent;
 }

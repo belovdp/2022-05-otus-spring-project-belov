@@ -55,6 +55,7 @@ INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_
 VALUES (26, false, false, true, 0, 'Категория 4.1.2.3', 23);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
 VALUES (27, false, false, true, 0, 'Категория 4.1.2.4', 23);
+ALTER TABLE categories ALTER COLUMN id RESTART WITH 28;
 
 INSERT INTO products (id, deleted, published, sort_index, title, category_id)
 VALUES (3, false, true, 0, 'Продукт 1', 1);
@@ -164,4 +165,5 @@ INSERT INTO products (id, deleted, published, sort_index, title, category_id)
 VALUES (55, false, true, 0, 'Продукт 54', 27);
 INSERT INTO products (id, deleted, published, sort_index, title, category_id)
 VALUES (56, false, true, 0, 'Продукт 55', 25);
+ALTER TABLE products ALTER COLUMN id RESTART WITH 57;
 

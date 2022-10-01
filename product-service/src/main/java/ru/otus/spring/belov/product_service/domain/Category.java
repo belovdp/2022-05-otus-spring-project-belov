@@ -1,8 +1,6 @@
 package ru.otus.spring.belov.product_service.domain;
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,8 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "categories")
-@NamedEntityGraph(name = "Category.childs",
-        attributeNodes = @NamedAttributeNode("childs"))
 public class Category {
 
     /** Идентификатор */
@@ -46,11 +42,18 @@ public class Category {
     @Column(name = "sort_index", nullable = false)
     private int sortIndex;
 
-    @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(mappedBy = "parent")
+    /** Дочерние категории */
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Category> childs;
 
+    /** Родительская категория */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
+
+    /**
+     * Продуткы
+     */
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products;
 }

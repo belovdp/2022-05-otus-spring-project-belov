@@ -2,7 +2,9 @@ package ru.otus.spring.belov.product_service.dto.mappers;
 
 import org.mapstruct.*;
 import ru.otus.spring.belov.product_service.domain.Category;
-import ru.otus.spring.belov.product_service.dto.CategoriesTreeItem;
+import ru.otus.spring.belov.product_service.dto.CategoryTreeItem;
+import ru.otus.spring.belov.product_service.dto.CategoryItem;
+import ru.otus.spring.belov.product_service.dto.SaveCategoryRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -20,17 +22,33 @@ public abstract class CategoryMapper {
     private static final long CATEGORY_WITH_NO_PARENTS_GROUP = -1;
 
     /**
+     * Конвертирует список категорий в категории без учёта детей
+     * @param categories категории
+     * @return список категорий в категории без учёта детей
+     */
+    public abstract List<CategoryItem> categoryToCategoryItem(List<Category> categories);
+
+    @Mapping(target = "id", source = "source.id")
+    @Mapping(target = "title", source = "source.title")
+    @Mapping(target = "deleted", source = "source.deleted")
+    @Mapping(target = "hideMenu", source = "source.hideMenu")
+    @Mapping(target = "published", source = "source.published")
+    @Mapping(target = "sortIndex", source = "source.sortIndex")
+    @Mapping(target = "parent", source = "parent")
+    public abstract void updateCategoryFromDto(SaveCategoryRequest source, Category parent, @MappingTarget Category category);
+
+    /**
      * Возвращает дерево категорий
      * @param categories список категорий
      * @return дерево категорий
      */
-    public List<CategoriesTreeItem> categoriesToTree(List<Category> categories) {
+    public List<CategoryTreeItem> categoriesToTree(List<Category> categories) {
         var groupByParent = categories.stream()
                 .collect(Collectors.groupingBy(cat -> ofNullable(cat.getParent())
                                 .map(Category::getId)
                                 .orElse(CATEGORY_WITH_NO_PARENTS_GROUP),
                         Collectors.toList()));
-        return groupByParent.get(CATEGORY_WITH_NO_PARENTS_GROUP).stream().map(category -> doToDto(category, groupByParent)).toList();
+        return groupByParent.get(CATEGORY_WITH_NO_PARENTS_GROUP).stream().map(category -> categoryToCategoriesTreeItem(category, groupByParent)).toList();
     }
 
     /**
@@ -40,7 +58,7 @@ public abstract class CategoryMapper {
      * @return узел дерева категорий
      */
     @Mapping(target = "childs", ignore = true)
-    abstract CategoriesTreeItem doToDto(Category category, @Context Map<Long, List<Category>> groupsByParent);
+    abstract CategoryTreeItem categoryToCategoriesTreeItem(Category category, @Context Map<Long, List<Category>> groupsByParent);
 
     /**
      * Пост конвертер. Устанавливает детей категории в дереве
@@ -48,9 +66,9 @@ public abstract class CategoryMapper {
      * @param groupsByParent группировка категорий по родителям
      */
     @AfterMapping
-    void afterMapping(@MappingTarget CategoriesTreeItem categoryDto, @Context Map<Long, List<Category>> groupsByParent) {
+    void afterMapping(@MappingTarget CategoryTreeItem categoryDto, @Context Map<Long, List<Category>> groupsByParent) {
         if (groupsByParent.containsKey(categoryDto.getId())) {
-            var childs = groupsByParent.get(categoryDto.getId()).stream().map(cat -> doToDto(cat, groupsByParent)).toList();
+            var childs = groupsByParent.get(categoryDto.getId()).stream().map(cat -> categoryToCategoriesTreeItem(cat, groupsByParent)).toList();
             categoryDto.setChilds(childs);
         }
     }

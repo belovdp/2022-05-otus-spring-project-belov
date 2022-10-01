@@ -21,6 +21,7 @@ import static java.util.Optional.ofNullable;
 
 /**
  * Подключение keycloak
+ * TODO избавиться от deprecated
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -45,6 +46,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 );
+        http.csrf().disable();
     }
 
     @Bean
