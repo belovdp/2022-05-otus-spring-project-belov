@@ -2,9 +2,9 @@ package ru.otus.spring.belov.product_service.dto.mappers;
 
 import org.mapstruct.*;
 import ru.otus.spring.belov.product_service.domain.Category;
-import ru.otus.spring.belov.product_service.dto.CategoryTreeItem;
-import ru.otus.spring.belov.product_service.dto.CategoryItem;
-import ru.otus.spring.belov.product_service.dto.SaveCategoryRequest;
+import ru.otus.spring.belov.product_service.dto.category.CategoryTreeItem;
+import ru.otus.spring.belov.product_service.dto.category.CategoryItem;
+import ru.otus.spring.belov.product_service.dto.category.SaveCategoryRequest;
 
 import java.util.List;
 import java.util.Map;

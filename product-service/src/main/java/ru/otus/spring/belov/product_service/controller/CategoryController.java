@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.otus.spring.belov.product_service.dto.CategoryTreeItem;
+import ru.otus.spring.belov.product_service.dto.category.CategoryTreeItem;
 import ru.otus.spring.belov.product_service.service.CategoryService;
 
 import java.util.List;

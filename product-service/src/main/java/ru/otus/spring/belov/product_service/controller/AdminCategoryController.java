@@ -2,9 +2,9 @@ package ru.otus.spring.belov.product_service.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.spring.belov.product_service.dto.CategoryItem;
-import ru.otus.spring.belov.product_service.dto.CategoryTreeItem;
-import ru.otus.spring.belov.product_service.dto.SaveCategoryRequest;
+import ru.otus.spring.belov.product_service.dto.category.CategoryItem;
+import ru.otus.spring.belov.product_service.dto.category.CategoryTreeItem;
+import ru.otus.spring.belov.product_service.dto.category.SaveCategoryRequest;
 import ru.otus.spring.belov.product_service.service.CategoryService;
 
 import java.util.List;

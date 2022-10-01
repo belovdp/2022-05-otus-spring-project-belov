@@ -1,18 +1,14 @@
-package ru.otus.spring.belov.product_service.dto;
+package ru.otus.spring.belov.product_service.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
 
 /**
- * Категория продуктов
+ * Запрос на создание/обновление категории
  */
 @AllArgsConstructor
-@Setter
 @Getter
-public class CategoryItem {
+public class SaveCategoryRequest {
 
     /** Идентификатор */
     private Long id;
@@ -26,4 +22,6 @@ public class CategoryItem {
     private boolean published;
     /** Индекс сортировки */
     private int sortIndex;
+    /** Идентификатор родительской категории */
+    private Long parent;
 }

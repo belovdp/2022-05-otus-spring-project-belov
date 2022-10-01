@@ -38,9 +38,12 @@ public class Product {
     @Column(name = "sort_index", nullable = false)
     private int sortIndex;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "products_categories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
 
     @OneToMany(mappedBy = "product")
     private List<Image> images;

@@ -54,6 +54,14 @@ public class Category {
     /**
      * Продуткы
      */
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "categories")
     private List<Product> products;
+
+//    TODO подумать что с этим делать
+//    @PreRemove
+//    private void removeGroupsFromUsers() {
+//        for (Product product : products) {
+//            product.getCategories().remove(this);
+//        }
+//    }
 }
