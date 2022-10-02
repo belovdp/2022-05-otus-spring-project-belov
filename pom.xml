@@ -20,6 +20,7 @@
     <modules>
         <module>user-service</module>
         <module>product-service</module>
+        <module>eureka-service</module>
     </modules>
 
     <properties>
@@ -29,6 +30,7 @@
         <keycloak.version>16.1.1</keycloak.version>
         <swagger.version>3.0.0</swagger.version>
         <querydsl.version>5.0.0</querydsl.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -96,6 +98,13 @@
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
                 <version>${querydsl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -35,6 +35,7 @@ public class WebSecurityConfiguration {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
+                .antMatchers("/actuator/health")
                 .antMatchers("/swagger-ui.html")
                 .antMatchers("/swagger-ui/**")
                 .antMatchers("/webjars/springfox-swagger-ui/**")
@@ -50,7 +51,7 @@ public class WebSecurityConfiguration {
                         .antMatchers(HttpMethod.POST, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
                         .antMatchers("/admin/**").hasAnyRole("EDITOR", "VIEWER", "ADMIN")
                         .antMatchers("/categories/**", "/products/**").permitAll()
-                        .anyRequest().permitAll())
+                        .anyRequest().denyAll())
                 .oauth2ResourceServer(resourceServerConfigurer -> resourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))

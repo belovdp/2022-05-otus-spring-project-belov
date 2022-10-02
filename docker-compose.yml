@@ -39,11 +39,16 @@ services:
     privileged: true
     depends_on:
       - keycloak
+      - eureka-service
     environment:
       KC_URL: http://keycloak:8080/auth
       KC_REALM: shop
       KC_CLIENT_ID: shop-app
       KC_SECRET: WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI
+      EUREKA_SERVICE_SERVER_PORT: 8084
+      EUREKA_SERVICE_SERVER_HOSTNAME: eureka-service
+      eureka.instance.preferIpAddress: true
+      eureka.instance.ip-address: 127.0.0.1
     ports:
       - "8081:8081"
 
@@ -57,12 +62,17 @@ services:
     depends_on:
       - keycloak
       - product-service-db
+      - eureka-service
     environment:
       PRODUCTS_PROJECT_PROFILE: demo
       PRODUCTS_DB_URL: jdbc:postgresql://product-service-db:5432/product_catalog
       PRODUCTS_DB_USERNAME: product
       PRODUCTS_DB_PASSWORD: password
       PRODUCTS_KEYCLOAK_CERT: http://localhost:8080/auth/realms/shop/protocol/openid-connect/certs
+      EUREKA_SERVICE_SERVER_PORT: 8084
+      EUREKA_SERVICE_SERVER_HOSTNAME: eureka-service
+      eureka.instance.preferIpAddress: true
+      eureka.instance.ip-address: 127.0.0.1
     ports:
       - "8082:8082"
 
@@ -73,3 +83,15 @@ services:
       POSTGRES_DB: product_catalog
       POSTGRES_USER: product
       POSTGRES_PASSWORD: password
+
+  eureka-service:
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    image: belovdp/eureka-service
+    container_name: eureka-service
+    privileged: true
+    environment:
+      EUREKA_SERVICE_SERVER_HOSTNAME: localhost
+    ports:
+      - "8084:8084"

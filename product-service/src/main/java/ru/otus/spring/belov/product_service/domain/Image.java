@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 /**
  * Картинка
+ * TODO реализовать когда будет UI
  */
 @Builder
 @Getter

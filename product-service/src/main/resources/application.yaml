@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: product-service
   profiles:
     active: ${products.project.profile:prod}
   datasource:
@@ -28,6 +30,24 @@ spring:
           jwk-set-uri: ${products.keycloak.cert:http://localhost:8080/auth/realms/shop/protocol/openid-connect/certs}
 server:
   port: 8082
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    service-url:
+      defaultZone: http://${eureka-service.server.hostname:localhost}:${eureka-service.server.port:8084}/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,logfile
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: true
 
 ---
 spring:
