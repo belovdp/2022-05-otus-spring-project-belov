@@ -8,10 +8,6 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
-    #ports:
-    #  - "127.0.0.1:5432:5432"
-    networks:
-      - local-keycloak
 
   keycloak:
     depends_on:
@@ -32,15 +28,14 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:8080:8080"
-    networks:
-      - local-keycloak
 
-  app:
+  user-service:
     build:
       context: ./user-service
       dockerfile: Dockerfile
     image: belovdp/user-service
     container_name: user-service
+    restart: always
     privileged: true
     depends_on:
       - keycloak
@@ -51,8 +46,30 @@ services:
       KC_SECRET: WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI
     ports:
       - "8081:8081"
-    networks:
-      - local-keycloak
 
-networks:
-  local-keycloak:
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    image: belovdp/product-service
+    container_name: product-service
+    privileged: true
+    depends_on:
+      - keycloak
+      - product-service-db
+    environment:
+      PRODUCTS_PROJECT_PROFILE: demo
+      PRODUCTS_DB_URL: jdbc:postgresql://product-service-db:5432/product_catalog
+      PRODUCTS_DB_USERNAME: product
+      PRODUCTS_DB_PASSWORD: password
+      PRODUCTS_KEYCLOAK_CERT: http://localhost:8080/auth/realms/shop/protocol/openid-connect/certs
+    ports:
+      - "8082:8082"
+
+  product-service-db:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: product_catalog
+      POSTGRES_USER: product
+      POSTGRES_PASSWORD: password
