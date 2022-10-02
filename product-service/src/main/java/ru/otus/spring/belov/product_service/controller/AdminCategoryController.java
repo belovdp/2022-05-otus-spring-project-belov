@@ -1,12 +1,15 @@
 package ru.otus.spring.belov.product_service.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.otus.spring.belov.product_service.dto.category.CategoryFilter;
 import ru.otus.spring.belov.product_service.dto.category.CategoryItem;
 import ru.otus.spring.belov.product_service.dto.category.CategoryTreeItem;
 import ru.otus.spring.belov.product_service.dto.category.SaveCategoryRequest;
 import ru.otus.spring.belov.product_service.service.CategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -15,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/categories")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class AdminCategoryController {
 
     /** Сервис по работе с категориями */
@@ -25,8 +29,18 @@ public class AdminCategoryController {
      * @return дерево категорий
      */
     @GetMapping("/tree")
-    public List<CategoryTreeItem> getCategoriesTree() {
-        return categoryService.getCategoriesTree(true);
+    public List<CategoryTreeItem> getCategoriesTree(@Valid CategoryFilter request) {
+        return categoryService.getCategoriesTree(request);
+    }
+
+    /**
+     * Вовзращает категорию
+     * @param id идентификатор категории
+     * @return категория
+     */
+    @GetMapping("/{id}")
+    public CategoryItem getProduct(@PathVariable Long id) {
+        return categoryService.getCategoryById(id);
     }
 
     /**

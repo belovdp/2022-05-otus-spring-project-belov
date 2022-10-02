@@ -13,7 +13,7 @@ import ru.otus.spring.belov.product_service.domain.Product;
 import ru.otus.spring.belov.product_service.domain.QProduct;
 import ru.otus.spring.belov.product_service.dto.mappers.ProductMapper;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
-import ru.otus.spring.belov.product_service.dto.product.ProductRequest;
+import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.SaveProductRequest;
 import ru.otus.spring.belov.product_service.exceptions.ApplicationException;
 import ru.otus.spring.belov.product_service.repository.CategoryRepository;
@@ -39,9 +39,15 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public Page<ProductItem> getProducts(ProductRequest productRequest, Pageable pageable) {
-        var products = productRepository.findAll(getProductPredicate(productRequest), pageable);
+    public Page<ProductItem> getProducts(ProductFilter productFilter, Pageable pageable) {
+        var products = productRepository.findAll(getProductPredicate(productFilter), pageable);
         return products.map(productMapper::productToProductItem);
+    }
+
+    @Override
+    public ProductItem getProductById(Long id) {
+        var product = productRepository.getReferenceById(id);
+        return productMapper.productToProductItem(product);
     }
 
     @Override
@@ -78,19 +84,19 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    private Predicate getProductPredicate(ProductRequest productRequest) {
+    private Predicate getProductPredicate(ProductFilter productFilter) {
         var qProduct = QProduct.product;
         var booleanBuilder = new BooleanBuilder(Expressions.ONE.eq(1));
-        if (productRequest.getCategoryId() != null) {
-            var category = categoryRepository.findById(productRequest.getCategoryId())
+        if (productFilter.getCategoryId() != null) {
+            var category = categoryRepository.findById(productFilter.getCategoryId())
                     .orElseThrow(() -> new ApplicationException("Не найдена просматриваемая категория"));
             booleanBuilder.and(qProduct.categories.contains(category));
         }
-        if (productRequest.getDeleted() != null) {
-            booleanBuilder.and(qProduct.deleted.eq(productRequest.getDeleted()));
+        if (productFilter.getDeleted() != null) {
+            booleanBuilder.and(qProduct.deleted.eq(productFilter.getDeleted()));
         }
-        if (productRequest.getPublished() != null) {
-            booleanBuilder.and(qProduct.deleted.eq(productRequest.getPublished()));
+        if (productFilter.getPublished() != null) {
+            booleanBuilder.and(qProduct.published.eq(productFilter.getPublished()));
         }
         return booleanBuilder.getValue();
     }

@@ -29,6 +29,13 @@ public abstract class CategoryMapper {
     public abstract List<CategoryItem> categoryToCategoryItem(List<Category> categories);
 
     /**
+     * Конвертирует категорию в dto
+     * @param categories категории
+     * @return категорию
+     */
+    public abstract CategoryItem categoryToCategoryItem(Category categories);
+
+    /**
      * Обновляет сущность на основе DTO
      * @param source   dto
      * @param parent   родительские категории

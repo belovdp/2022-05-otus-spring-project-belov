@@ -2,13 +2,17 @@ package ru.otus.spring.belov.product_service.dto.product;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Запрос на получение продукта
+ * Фильтр на получение продукта
  */
 @Builder
 @Getter
-public class ProductRequest {
+@Setter
+public class ProductFilter {
+    /** Идентификатор продукта */
+    private Long id;
     /** Категория */
     private Long categoryId;
     /** Признак того что продукт в корзине */

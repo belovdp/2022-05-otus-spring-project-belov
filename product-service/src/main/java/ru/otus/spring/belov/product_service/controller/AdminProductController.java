@@ -6,10 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
-import ru.otus.spring.belov.product_service.dto.product.ProductRequest;
+import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.SaveProductRequest;
 import ru.otus.spring.belov.product_service.service.ProductServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -31,9 +32,19 @@ public class AdminProductController {
      * @return продукты не удалённые и опубликованные из категории
      */
     @GetMapping("/")
-    public Page<ProductItem> getProducts(ProductRequest request,
+    public Page<ProductItem> getProducts(@Valid ProductFilter request,
                                          Pageable pageable) {
         return productService.getProducts(request, pageable);
+    }
+
+    /**
+     * Вовзращает продукт
+     * @param id идентификатор продукта
+     * @return продукт
+     */
+    @GetMapping("/{id}")
+    public ProductItem getProduct(@PathVariable Long id) {
+        return productService.getProductById(id);
     }
 
     /**

@@ -3,7 +3,7 @@ package ru.otus.spring.belov.product_service.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
-import ru.otus.spring.belov.product_service.dto.product.ProductRequest;
+import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.SaveProductRequest;
 
 import java.util.List;
@@ -15,11 +15,18 @@ public interface ProductService {
 
     /**
      * Возвращает продукты
-     * @param productRequest категория
-     * @param pageable       пагинация
+     * @param productFilter запрос на фильтрацию
+     * @param pageable      пагинация
      * @return продукты
      */
-    Page<ProductItem> getProducts(ProductRequest productRequest, Pageable pageable);
+    Page<ProductItem> getProducts(ProductFilter productFilter, Pageable pageable);
+
+    /**
+     * Возвращает продукт
+     * @param id идентификатор продукта
+     * @return продукт
+     */
+    ProductItem getProductById(Long id);
 
     /**
      * Возвращает продукты из корзины

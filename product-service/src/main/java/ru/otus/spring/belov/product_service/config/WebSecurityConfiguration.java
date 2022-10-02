@@ -2,51 +2,59 @@ package ru.otus.spring.belov.product_service.config;
 
 import com.nimbusds.jose.shaded.json.JSONArray;
 import com.nimbusds.jose.shaded.json.JSONObject;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Подключение keycloak
- * TODO избавиться от deprecated
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class WebSecurityConfiguration {
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/swagger-ui.html")
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .antMatchers("/swagger-ui.html")
                 .antMatchers("/swagger-ui/**")
                 .antMatchers("/webjars/springfox-swagger-ui/**")
                 .antMatchers("/swagger-resources/**")
                 .antMatchers("/v3/api-docs/**");
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // TODO подключить секьюрность
-        http
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        TODO подключить секьюрность
+        http.csrf(withDefaults())
                 .authorizeRequests(authorizeRequests -> authorizeRequests
+//                        .antMatchers(HttpMethod.DELETE, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
+//                        .antMatchers(HttpMethod.POST, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
+//                        .antMatchers("/admin/**").hasAnyRole("EDITOR", "VIEWER", "ADMIN")
+//                        .antMatchers("/categories/**", "/products/**").permitAll()
                         .anyRequest().permitAll())
                 .oauth2ResourceServer(resourceServerConfigurer -> resourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 );
-        http.csrf().disable();
+        return http.build();
     }
 
     @Bean
