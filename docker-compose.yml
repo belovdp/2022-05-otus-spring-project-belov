@@ -95,3 +95,13 @@ services:
       EUREKA_SERVICE_SERVER_HOSTNAME: localhost
     ports:
       - "8084:8084"
+
+  admin-ui:
+    build:
+      context: ./admin-ui
+      dockerfile: Dockerfile
+    image: belovdp/admin-ui
+    container_name: admin-ui
+    privileged: true
+    ports:
+      - "8085:80"
