@@ -3,7 +3,9 @@ package ru.otus.spring.belov.product_service.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Продукт
@@ -38,12 +40,12 @@ public class Product {
     @Column(name = "sort_index", nullable = false)
     private int sortIndex;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "products_categories",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "product")
     private List<Image> images;

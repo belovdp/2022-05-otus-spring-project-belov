@@ -11,7 +11,7 @@ CREATE TABLE categories
     sort_index integer default 0      not null,
     title      character varying(255) NOT NULL,
     parent_id  bigint,
-    FOREIGN KEY (parent_id) REFERENCES categories (id)
+    FOREIGN KEY (parent_id) REFERENCES categories (id) on delete cascade
 );
 
 CREATE TABLE products
@@ -29,8 +29,8 @@ CREATE TABLE products_categories
     category_id bigint not null,
     product_id  bigint not null,
     PRIMARY KEY (category_id, product_id),
-    FOREIGN KEY (category_id) REFERENCES categories (id),
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id) on delete cascade,
+    FOREIGN KEY (product_id) REFERENCES products (id) on delete cascade
 );
 
 CREATE TABLE images

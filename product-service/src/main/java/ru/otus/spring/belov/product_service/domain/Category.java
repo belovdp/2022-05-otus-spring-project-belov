@@ -3,7 +3,9 @@ package ru.otus.spring.belov.product_service.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Категория продуктов
@@ -43,7 +45,7 @@ public class Category {
     private int sortIndex;
 
     /** Дочерние категории */
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent")
     private List<Category> childs;
 
     /** Родительская категория */
@@ -56,12 +58,4 @@ public class Category {
      */
     @ManyToMany(mappedBy = "categories")
     private List<Product> products;
-
-//    TODO подумать что с этим делать
-//    @PreRemove
-//    private void removeGroupsFromUsers() {
-//        for (Product product : products) {
-//            product.getCategories().remove(this);
-//        }
-//    }
 }

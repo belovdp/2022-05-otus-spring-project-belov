@@ -41,12 +41,13 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.categoryToCategoryItem(categoryRepository.findAllByDeletedTrue());
     }
 
-    @Override
     @Transactional
+    @Override
     public void moveToTrash(List<Long> ids) {
         categoryRepository.moveToTrash(ids);
     }
 
+    @Transactional
     @Override
     public void delete(List<Long> ids) {
         var cats = categoryRepository.findAllById(ids);

@@ -28,6 +28,12 @@ public abstract class CategoryMapper {
      */
     public abstract List<CategoryItem> categoryToCategoryItem(List<Category> categories);
 
+    /**
+     * Обновляет сущность на основе DTO
+     * @param source   dto
+     * @param parent   родительские категории
+     * @param category обновляемая сущность
+     */
     @Mapping(target = "id", source = "source.id")
     @Mapping(target = "title", source = "source.title")
     @Mapping(target = "deleted", source = "source.deleted")

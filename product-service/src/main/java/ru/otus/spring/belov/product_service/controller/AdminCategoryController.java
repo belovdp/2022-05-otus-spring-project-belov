@@ -59,7 +59,7 @@ public class AdminCategoryController {
      * @param saveCategoryRequest запрос на сохранение/обновление категорий
      */
     @PostMapping("/")
-    public void getTrash(@RequestBody SaveCategoryRequest saveCategoryRequest) {
+    public void save(@RequestBody SaveCategoryRequest saveCategoryRequest) {
         categoryService.saveCategory(saveCategoryRequest);
     }
 }
