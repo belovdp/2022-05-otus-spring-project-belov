@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -28,6 +29,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class WebSecurityConfiguration {
 
     @Bean
@@ -42,13 +44,12 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        TODO подключить секьюрность
         http.csrf(withDefaults())
                 .authorizeRequests(authorizeRequests -> authorizeRequests
-//                        .antMatchers(HttpMethod.DELETE, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
-//                        .antMatchers(HttpMethod.POST, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
-//                        .antMatchers("/admin/**").hasAnyRole("EDITOR", "VIEWER", "ADMIN")
-//                        .antMatchers("/categories/**", "/products/**").permitAll()
+                        .antMatchers(HttpMethod.DELETE, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
+                        .antMatchers(HttpMethod.POST, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
+                        .antMatchers("/admin/**").hasAnyRole("EDITOR", "VIEWER", "ADMIN")
+                        .antMatchers("/categories/**", "/products/**").permitAll()
                         .anyRequest().permitAll())
                 .oauth2ResourceServer(resourceServerConfigurer -> resourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer

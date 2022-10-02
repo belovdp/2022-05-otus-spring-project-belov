@@ -6,6 +6,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.belov.product_service.domain.Category;
@@ -79,9 +80,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @PostAuthorize("hasAnyRole('VIEWER', 'EDITOR', 'ADMIN') or ((returnObject.deleted == false) and (returnObject.published = true))")
     public CategoryItem getCategoryById(Long catId) {
-        // TODO проверка прав
-        var category = categoryRepository.getReferenceById(catId);
+        var category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new ApplicationException("Категория не найдена"));
         return categoryMapper.categoryToCategoryItem(category);
     }
 

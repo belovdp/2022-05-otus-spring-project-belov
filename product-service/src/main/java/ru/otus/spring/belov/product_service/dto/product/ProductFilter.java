@@ -11,8 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProductFilter {
-    /** Идентификатор продукта */
-    private Long id;
     /** Категория */
     private Long categoryId;
     /** Признак того что продукт в корзине */
