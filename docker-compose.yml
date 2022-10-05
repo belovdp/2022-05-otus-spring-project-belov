@@ -47,8 +47,6 @@ services:
       KC_SECRET: WBdsIy3SVkffSULcv7TuvCLYd6KsQJOI
       EUREKA_SERVICE_SERVER_PORT: 8084
       EUREKA_SERVICE_SERVER_HOSTNAME: eureka-service
-      eureka.instance.preferIpAddress: true
-      eureka.instance.ip-address: 127.0.0.1
     ports:
       - "8081:8081"
 
@@ -71,8 +69,6 @@ services:
       PRODUCTS_KEYCLOAK_CERT: http://localhost:8080/auth/realms/shop/protocol/openid-connect/certs
       EUREKA_SERVICE_SERVER_PORT: 8084
       EUREKA_SERVICE_SERVER_HOSTNAME: eureka-service
-      eureka.instance.preferIpAddress: true
-      eureka.instance.ip-address: 127.0.0.1
     ports:
       - "8082:8082"
 
@@ -95,6 +91,20 @@ services:
       EUREKA_SERVICE_SERVER_HOSTNAME: localhost
     ports:
       - "8084:8084"
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    image: belovdp/gateway-service
+    container_name: gateway-service
+    privileged: true
+    environment:
+      EUREKA_SERVICE_SERVER_PORT: 8084
+      EUREKA_SERVICE_SERVER_HOSTNAME: eureka-service
+      GATEWAY_CORS: http://localhost:9000
+    ports:
+      - "8086:8086"
 
   admin-ui:
     build:

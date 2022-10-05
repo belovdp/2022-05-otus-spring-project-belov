@@ -9,9 +9,8 @@ import router from "@/ts/config/router";
 import store from "@/ts/config/store";
 import locale from "element-ui/lib/locale/lang/ru-RU";
 
-// TODO добавить zuul
-// TODO Настроить взаимодействие через zuul
 // TODO Пробросить env в виде адреса zuul
+// TODO Настроить взаимодействие через zuul
 Vue.config.productionTip = false;
 
 Vue.use(Element, { locale });
