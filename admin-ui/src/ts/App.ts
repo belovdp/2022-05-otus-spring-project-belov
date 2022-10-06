@@ -1,4 +1,5 @@
 import { Component, Vue } from "vue-property-decorator";
+import axios from "axios";
 
 @Component({
     template: `
@@ -44,6 +45,11 @@ import { Component, Vue } from "vue-property-decorator";
 export default class App extends Vue {
 
     private data = [];
+
+    async created() {
+        // TODO доделать. Это только проверка взаимодействия
+        this.data = (await axios.get("/product-service/categories/tree")).data;
+    }
 
     private onMenuClick() {
         // TODO переход на страницу категории

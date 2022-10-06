@@ -2,16 +2,17 @@ import "@/style/styles.scss";
 import "@/style/img/favicon.ico";
 import "element-ui/lib/theme-chalk/index.css";
 import App from "@/ts/App";
-import {AxiosError} from "axios";
+import axios, {AxiosError} from "axios";
 import Element, {Notification} from "element-ui";
 import Vue from "vue";
 import router from "@/ts/config/router";
 import store from "@/ts/config/store";
 import locale from "element-ui/lib/locale/lang/ru-RU";
+import "@/js/env.js";
 
-// TODO Пробросить env в виде адреса zuul
-// TODO Настроить взаимодействие через zuul
 Vue.config.productionTip = false;
+
+axios.defaults.baseURL = ENVS.GATEWAY_URL;
 
 Vue.use(Element, { locale });
 

@@ -1,0 +1,1 @@
+declare const ENVS: {[key: string]: string};

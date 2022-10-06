@@ -8,5 +8,8 @@ RUN npm run build
 # этап production (production-stage)
 FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
-EXPOSE 80
+COPY /env.tpl.js /usr/share/nginx/html/js/env.tpl.js
+COPY ./replaceEnvVars.sh /
+RUN chmod +x replaceEnvVars.sh
+ENTRYPOINT ["./replaceEnvVars.sh"]
 CMD ["nginx", "-g", "daemon off;"]
