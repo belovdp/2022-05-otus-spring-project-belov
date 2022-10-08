@@ -33,6 +33,7 @@ public abstract class CategoryMapper {
      * @param categories категории
      * @return категорию
      */
+    @Mapping(target = "parent", source = "parent.id")
     public abstract CategoryItem categoryToCategoryItem(Category categories);
 
     /**

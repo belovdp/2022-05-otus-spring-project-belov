@@ -1,5 +1,7 @@
 package ru.otus.spring.belov.product_service.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.otus.spring.belov.product_service.dto.category.CategoryFilter;
 import ru.otus.spring.belov.product_service.dto.category.CategoryTreeItem;
 import ru.otus.spring.belov.product_service.dto.category.CategoryItem;
@@ -23,13 +25,19 @@ public interface CategoryService {
      * Возвращает категории из корзины
      * @return категории из корзины
      */
-    List<CategoryItem> getTrash();
+    Page<CategoryItem> getTrash(Pageable pageable);
 
     /**
      * Переводит категории в корзину
      * @param ids идентификаторы категорий
      */
     void moveToTrash(List<Long> ids);
+
+    /**
+     * Переводит категории из корзину
+     * @param ids идентификаторы категорий
+     */
+    void restoreTrash(List<Long> ids);
 
     /**
      * Удаляет категории

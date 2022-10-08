@@ -2,6 +2,8 @@ package ru.otus.spring.belov.product_service.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.product_service.dto.category.CategoryFilter;
 import ru.otus.spring.belov.product_service.dto.category.CategoryItem;
@@ -48,8 +50,8 @@ public class AdminCategoryController {
      * @return категории
      */
     @GetMapping("/trash")
-    public List<CategoryItem> getTrash() {
-        return categoryService.getTrash();
+    public Page<CategoryItem> getTrash(Pageable pageable) {
+        return categoryService.getTrash(pageable);
     }
 
     /**
@@ -58,6 +60,15 @@ public class AdminCategoryController {
     @PostMapping("/trash")
     public void moveToTrash(@RequestBody List<Long> ids) {
         categoryService.moveToTrash(ids);
+    }
+
+    /**
+     * Востанавливает из корзины
+     * @param ids идентификаторы категорий
+     */
+    @PostMapping("/trash/restore")
+    public void restoreTrash(@RequestBody List<Long> ids) {
+        categoryService.restoreTrash(ids);
     }
 
     /**

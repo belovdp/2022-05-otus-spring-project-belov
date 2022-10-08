@@ -6,9 +6,9 @@ import store from "@/ts/config/store";
 @Component({
     template: `
       <el-col :span="4">
-      <el-menu default-active="2" class="mainMenu">
+      <el-menu default-active="2" class="mainMenu" router>
         <el-button icon="el-icon-plus" class="addCat" type="primary" circle size="mini" @click="onAddCategory"></el-button>
-        <el-submenu index="1">
+        <el-submenu index="/category">
           <template slot="title">
             <i class="el-icon-s-grid"></i>
             <span slot="title">Категории</span>
@@ -34,7 +34,7 @@ import store from "@/ts/config/store";
           <i class="el-icon-delete-solid"></i>
           <span slot="title">Корзина товаров</span>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="/category/trash">
           <i class="el-icon-delete-solid"></i>
           <span slot="title">Корзина категорий</span>
         </el-menu-item>

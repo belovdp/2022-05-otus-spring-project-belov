@@ -2,8 +2,8 @@ package ru.otus.spring.belov.product_service.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
+import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.SaveProductRequest;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public interface ProductService {
      * Возвращает продукты из корзины
      * @return продукты из корзины
      */
-    List<ProductItem> getTrash();
+    Page<ProductItem> getTrash(Pageable pageable);
 
     /**
      * Переводит продукты в корзину

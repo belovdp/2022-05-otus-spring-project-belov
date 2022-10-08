@@ -1,6 +1,5 @@
 import "@/style/styles.scss";
 import "@/style/img/favicon.ico";
-//import "element-ui/lib/theme-chalk/index.css";
 import App from "@/ts/App";
 import axios, {AxiosError} from "axios";
 import Element, {Notification} from "element-ui";
@@ -12,6 +11,9 @@ import "@/js/env.js";
 import VueAxios from "vue-axios";
 import VueCookies from "vue-cookies";
 import AxiosInterceptor from "@/ts/config/axiosInterceptor";
+
+// TODO иногда проскакивает 401
+// TODO использовать роли токена
 
 Vue.config.productionTip = false;
 

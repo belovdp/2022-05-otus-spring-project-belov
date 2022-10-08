@@ -54,8 +54,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductItem> getTrash() {
-        return productMapper.productToProductItem(productRepository.findAllByDeletedTrue());
+    public Page<ProductItem> getTrash(Pageable pageable) {
+        return productRepository.findAllByDeletedTrue(pageable).map(productMapper::productToProductItem);
     }
 
     @Override

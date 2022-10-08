@@ -52,8 +52,8 @@ public class AdminProductController {
      * @return продукты
      */
     @GetMapping("/trash")
-    public List<ProductItem> getTrash() {
-        return productService.getTrash();
+    public Page<ProductItem> getTrash(Pageable pageable) {
+        return productService.getTrash(pageable);
     }
 
     /**

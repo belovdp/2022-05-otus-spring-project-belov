@@ -1,5 +1,7 @@
 package ru.otus.spring.belov.product_service.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Queryds
      * Возвращает все продукты из корзины
      * @return все продукты из корзины
      */
-    List<Product> findAllByDeletedTrue();
+    Page<Product> findAllByDeletedTrue(Pageable pageable);
 
     /**
      * Переносит продукты в корзину

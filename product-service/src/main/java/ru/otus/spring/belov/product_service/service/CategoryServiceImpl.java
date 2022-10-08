@@ -5,6 +5,8 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.stereotype.Service;
@@ -45,14 +47,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryItem> getTrash() {
-        return categoryMapper.categoryToCategoryItem(categoryRepository.findAllByDeletedTrue());
+    public Page<CategoryItem> getTrash(Pageable pageable) {
+        return categoryRepository.findAllByDeletedTrue(pageable).map(categoryMapper::categoryToCategoryItem);
     }
 
     @Transactional
     @Override
     public void moveToTrash(List<Long> ids) {
-        categoryRepository.moveToTrash(ids);
+        categoryRepository.modifyDeleteFlag(ids, true);
+    }
+
+    @Transactional
+    @Override
+    public void restoreTrash(List<Long> ids) {
+        categoryRepository.modifyDeleteFlag(ids, false);
     }
 
     @Transactional

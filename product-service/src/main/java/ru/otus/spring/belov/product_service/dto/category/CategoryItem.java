@@ -24,4 +24,6 @@ public class CategoryItem {
     private boolean published;
     /** Индекс сортировки */
     private int sortIndex;
+    /** Идентификатор родителя */
+    private int parent;
 }

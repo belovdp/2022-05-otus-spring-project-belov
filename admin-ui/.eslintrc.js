@@ -23,7 +23,7 @@ module.exports = {
         // Отключаем for in для массивов
         "@typescript-eslint/no-for-in-array": "warn",
         // Не ставим await в return
-        "no-return-await": "warn",
+        "no-return-await": "off",
         // Никаких any
         "@typescript-eslint/no-explicit-any": "warn",
         // Настраиваем отступы

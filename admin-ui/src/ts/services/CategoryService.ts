@@ -1,5 +1,6 @@
 import {OnlyInstantiableByContainer, Singleton} from "typescript-ioc";
 import axios from "axios";
+import {SpringPageable, TableData} from "@/ts/components/common/PageableTable";
 
 /**
  * Сервис по работе с авторизацией
@@ -24,11 +25,38 @@ export class CategoryService {
     }
 
     /**
+     * Возвращает содержимое корзины
+     */
+    async getTrash(pageable: SpringPageable): Promise<TableData<CategoryItem>> {
+        return (await axios.get<TableData<CategoryItem>>("/product-service/admin/categories/trash", {
+            params: pageable
+        })).data;
+    }
+
+    /**
      * Переносит в корзину
      * @param ids идентификаторы категории
      */
     async moveToTrash(ids: number[]): Promise<void> {
         await axios.post("/product-service/admin/categories/trash", ids);
+    }
+
+    /**
+     * Переносит в корзину
+     * @param ids идентификаторы категории
+     */
+    async trashRestore(ids: number[]): Promise<void> {
+        await axios.post("/product-service/admin/categories/trash/restore", ids);
+    }
+
+    /**
+     * Удаляет с концами
+     * @param ids идентификаторы категории
+     */
+    async delete(ids: number[]): Promise<void> {
+        await axios.delete("/product-service/admin/categories/", {
+            data: ids
+        });
     }
 
     /**

@@ -1,5 +1,7 @@
 package ru.otus.spring.belov.product_service.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,12 +20,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Query
      * Возвращает все категории из корзины
      * @return все категории из корзины
      */
-    List<Category> findAllByDeletedTrue();
+    Page<Category> findAllByDeletedTrue(Pageable pageable);
 
     /**
-     * Переносит категории в корзину
+     * Переносит категории в корзину или из карзины
      */
     @Modifying
-    @Query("update Category c set c.deleted = true where c.id in :ids")
-    void moveToTrash(@Param("ids") List<Long> ids);
+    @Query("update Category c set c.deleted = :deleted where c.id in :ids")
+    void modifyDeleteFlag(@Param("ids") List<Long> ids, @Param("deleted") boolean deleted);
 }

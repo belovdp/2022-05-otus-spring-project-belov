@@ -48,3 +48,37 @@ html, body, #app {
   justify-content: right;
   align-items: center;
 }
+
+
+.pageableTable {
+  .el-pagination {
+    display: flex;
+    flex-grow: 1;
+    padding: 20px 0 0 0;
+    .el-pagination__total {
+      order: 10;
+    }
+    .el-pagination__jump {
+      order: 20;
+      flex-grow: 1;
+    }
+    .btn-prev {
+      order: 30;
+    }
+    .el-pager {
+      order: 40;
+    }
+    .btn-next {
+      order: 50;
+    }
+    .el-pagination__sizes {
+      order: 100;
+      flex-grow: 1;
+      text-align: right;
+      margin: 0;
+      .el-input {
+        margin: 0;
+      }
+    }
+  }
+}

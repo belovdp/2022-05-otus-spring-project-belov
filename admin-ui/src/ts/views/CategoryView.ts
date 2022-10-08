@@ -33,7 +33,7 @@ import Toolbar from "@/ts/components/common/Toolbar";
           // TODO
         </el-tab-pane>
         <el-tab-pane label="Редактор" name="editor">
-          <el-form label-position="top" label-width="100px" :model="category">
+          <el-form v-if="category" label-position="top" label-width="100px" :model="category">
             <el-form-item label="Заголовок">
               <el-input v-model="category.title"></el-input>
             </el-form-item>
@@ -50,6 +50,7 @@ import Toolbar from "@/ts/components/common/Toolbar";
                        show-checkbox
                        node-key="id"
                        check-strictly
+                       :default-checked-keys="[category.parent]"
                        @check="onCheckChange"
                        :props="treeProps"></el-tree>
             </el-form-item>
@@ -178,6 +179,35 @@ export default class CategoryView extends Vue {
 
     /** Данные дерева категорий */
     private get catTree(): CategoryTreeItem[] {
-        return store.state.categories;
+        const categories = JSON.parse(JSON.stringify(store.state.categories));
+        const nodeToDisable = this.findNodeById(categories, this.$route.params.id);
+        if (nodeToDisable) {
+            this.disableNode([nodeToDisable]);
+        }
+        return categories;
+    }
+
+    private findNodeById(categories: CategoryTreeItem[], id: number): CategoryTreeItem | null {
+        for (const category of categories) {
+            if (String(category.id) === String(id)) {
+                return category;
+            }
+            if (category.childs) {
+                const resultFromChilds = this.findNodeById(category.childs, id);
+                if (resultFromChilds) {
+                    return resultFromChilds;
+                }
+            }
+        }
+        return null;
+    }
+
+    private disableNode(categories: (CategoryTreeItem & {disabled?: boolean})[]) {
+        categories.forEach(category => {
+            category.disabled = true;
+            if (category.childs) {
+                this.disableNode(category.childs);
+            }
+        });
     }
 }
