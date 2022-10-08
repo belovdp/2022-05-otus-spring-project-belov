@@ -1,11 +1,6 @@
 import {OnlyInstantiableByContainer, Singleton} from "typescript-ioc";
 import axios from "axios";
 
-/** Урл для получения токена */
-export const GET_TOKEN_URL = "/user-service/users/token";
-/** Урл для обновления токена */
-export const REFRESH_TOKEN_URL = "/user-service/users/refreshToken";
-
 /**
  * Сервис по работе с авторизацией
  */
@@ -13,11 +8,14 @@ export const REFRESH_TOKEN_URL = "/user-service/users/refreshToken";
 @OnlyInstantiableByContainer
 export class AuthService {
 
+    /** Axios без interceptor */
+    private http = axios.create();
+
     /**
      * Возвращает токен на основе логина и пароля
      */
     async login(request: LoginRequest): Promise<TokenInfo> {
-        const tokenInfo = (await axios.post<TokenInfoResponse>(GET_TOKEN_URL, request)).data;
+        const tokenInfo = (await this.http.post<TokenInfoResponse>("/user-service/users/token", request)).data;
         return AuthService.convertTokenResponse(tokenInfo);
     }
 
@@ -25,7 +23,7 @@ export class AuthService {
      * Возвращает токен на основе refresh Токена
      */
     async refreshToken(refreshToken: string): Promise<TokenInfo> {
-        const tokenInfo = (await axios.post<TokenInfoResponse>(REFRESH_TOKEN_URL, refreshToken)).data;
+        const tokenInfo = (await this.http.post<TokenInfoResponse>("/user-service/users/refreshToken", refreshToken)).data;
         return AuthService.convertTokenResponse(tokenInfo);
     }
 
