@@ -41,7 +41,7 @@ public interface CategoryService {
      * Возвращает сохранённую/изменённую категорию
      * @param saveCategoryRequest запрос на изменение/сохранение
      */
-    void saveCategory(SaveCategoryRequest saveCategoryRequest);
+    CategoryItem saveCategory(SaveCategoryRequest saveCategoryRequest);
 
     /**
      * Возвращает категорию

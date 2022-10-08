@@ -13,3 +13,21 @@ html, body, #app {
     width: 400px;
   }
 }
+
+.mainMenu {
+  .addCat {
+    position: absolute;
+    right: 40px;
+    font-size: 10px;
+    padding: 3px 3px 2px 2px !important;
+    margin-top: 20px;
+    z-index: 99;
+  }
+  .el-menu {
+    margin-left: 15px;
+  }
+}
+
+.mainContent {
+  padding: 15px;
+}

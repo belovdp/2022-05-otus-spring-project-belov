@@ -66,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void saveCategory(SaveCategoryRequest saveCategoryRequest) {
+    public CategoryItem saveCategory(SaveCategoryRequest saveCategoryRequest) {
         var category = ofNullable(saveCategoryRequest.getId())
                 .map(id -> categoryRepository.findById(id)
                         .orElseThrow(() ->
@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .flatMap(categoryRepository::findById)
                 .orElse(null);
         categoryMapper.updateCategoryFromDto(saveCategoryRequest, parentCategory, category);
-        categoryRepository.save(category);
+        return categoryMapper.categoryToCategoryItem(categoryRepository.save(category));
     }
 
     @Override

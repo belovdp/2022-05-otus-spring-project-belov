@@ -3,6 +3,8 @@ package ru.otus.spring.belov.product_service.dto.category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.NotEmpty;
+
 /**
  * Запрос на создание/обновление категории
  */
@@ -13,6 +15,7 @@ public class SaveCategoryRequest {
     /** Идентификатор */
     private Long id;
     /** Заголовок */
+    @NotEmpty(message = "Введите заголовок")
     private String title;
     /** Признак что ресурс в корзине */
     private boolean deleted;

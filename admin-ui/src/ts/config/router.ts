@@ -1,8 +1,9 @@
-import VueRouter, { RouteConfig } from "vue-router";
+import VueRouter, {RawLocation, Route, RouteConfig} from "vue-router";
 import Vue from "vue";
 import HomeView from "@/ts/views/HomeView";
 import LoginView from "@/ts/views/LoginView";
 import store from "@/ts/config/store";
+import CategoryView from "@/ts/views/CategoryView";
 
 Vue.use(VueRouter);
 
@@ -19,7 +20,23 @@ const routes: Array<RouteConfig> = [
             fullScreen: true
         }
     },
+    {
+        path: "/category/:id*",
+        name: "CategoryView",
+        component: CategoryView
+    }
 ];
+
+/** Игнорируем ошибку о попытке перейти с урла на тот же самый урл */
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location: RawLocation): Promise<Route> {
+    return originalPush.call<VueRouter, [RawLocation], Promise<Route>>(this, location).catch(err => {
+        if (err.name !== "NavigationDuplicated") {
+            throw err;
+        }
+        return (null as unknown) as Route;
+    });
+};
 
 const router = new VueRouter({
     routes

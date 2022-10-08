@@ -73,7 +73,7 @@ public class AdminCategoryController {
      * @param saveCategoryRequest запрос на сохранение/обновление категорий
      */
     @PostMapping("/")
-    public void save(@RequestBody SaveCategoryRequest saveCategoryRequest) {
-        categoryService.saveCategory(saveCategoryRequest);
+    public CategoryItem save(@RequestBody @Valid SaveCategoryRequest saveCategoryRequest) {
+        return categoryService.saveCategory(saveCategoryRequest);
     }
 }

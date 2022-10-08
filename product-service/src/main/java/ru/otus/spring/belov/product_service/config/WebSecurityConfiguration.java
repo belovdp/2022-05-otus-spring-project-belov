@@ -45,7 +45,9 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(withDefaults())
+        http
+                .csrf().disable()
+                .cors().disable()
                 .authorizeRequests(authorizeRequests -> authorizeRequests
                         .antMatchers(HttpMethod.DELETE, "/admin/**").hasAnyRole("EDITOR", "ADMIN")
                         .antMatchers(HttpMethod.POST, "/admin/**").hasAnyRole("EDITOR", "ADMIN")

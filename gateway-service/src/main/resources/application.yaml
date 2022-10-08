@@ -9,5 +9,8 @@ eureka:
       enabled: true
     service-url:
       defaultZone: http://${eureka-service.server.hostname:localhost}:${eureka-service.server.port:8084}/eureka/
+zuul:
+  sensitiveHeaders:
+  strip-prefix: false
 gateway:
   cors: http://localhost:9000

@@ -9,7 +9,14 @@ import axios from "axios";
 export class AuthService {
 
     /** Axios без interceptor */
-    private http = axios.create();
+    private http = axios.create({
+        transformRequest: (data, headers) => {
+            if (headers) {
+                delete headers.common["Authorization"];
+            }
+            return data;
+        }
+    });
 
     /**
      * Возвращает токен на основе логина и пароля
@@ -34,7 +41,7 @@ export class AuthService {
      */
     private static convertTokenResponse(tokenInfo: TokenInfoResponse): TokenInfo {
         const tokenExpiresAt = Date.parse(tokenInfo.loginResponseTime) + tokenInfo.expiresIn * 1000;
-        const refreshTokenExpiresAt = Date.parse(tokenInfo.loginResponseTime) + tokenInfo.expiresIn * 1000;
+        const refreshTokenExpiresAt = Date.parse(tokenInfo.loginResponseTime) + tokenInfo.refreshExpiresIn * 1000;
         return {
             token: tokenInfo.token,
             refreshToken: tokenInfo.refreshToken,
