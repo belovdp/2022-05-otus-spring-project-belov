@@ -3,6 +3,8 @@ package ru.otus.spring.belov.user_service.entity.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * Информация о токене
  */
@@ -10,13 +12,15 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class TokenInfoResponse {
     /** Токен */
-    protected final String token;
+    private final String token;
     /** Время жизни токена */
-    protected final long expiresIn;
+    private final long expiresIn;
     /** Токен для обновления токена */
-    protected final String refreshToken;
+    private final String refreshToken;
     /** Время жизни токена для обновления токена */
-    protected final long refreshExpiresIn;
+    private final long refreshExpiresIn;
     /** Тип токена */
-    protected final String tokenType;
+    private final String tokenType;
+    /** Время получения токена */
+    private final LocalDateTime loginResponseTime = LocalDateTime.now();
 }
