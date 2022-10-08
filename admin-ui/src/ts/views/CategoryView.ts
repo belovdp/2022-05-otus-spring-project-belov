@@ -5,10 +5,29 @@ import {CategoryItem, CategoryService, CategoryTreeItem} from "@/ts/services/Cat
 import {Route} from "vue-router";
 import {ElTree, TreeData} from "element-ui/types/tree";
 import {Notification} from "element-ui";
+import store from "@/ts/config/store";
+import Toolbar from "@/ts/components/common/Toolbar";
 
 @Component({
     template: `
       <div class="categoryView">
+      <toolbar :title="category.title">
+        <el-button-group slot="buttons">
+          <el-button v-if="!category.deleted"
+                     type="primary"
+                     size="mini"
+                     icon="el-icon-check"
+                     round
+                     @click="onSave">Сохранить</el-button>
+          <el-button v-if="!isNewCategory && category.deleted"
+                     type="warning"
+                     size="mini"
+                     icon="el-icon-upload2"
+                     round
+                     @click="onRestore">Востановить</el-button>
+          <el-button v-if="!isNewCategory && !category.deleted" type="danger" size="mini" icon="el-icon-delete-solid" round @click="onDelete"></el-button>
+        </el-button-group>
+      </toolbar>
       <el-tabs :value="activeTab">
         <el-tab-pane v-if="!isNewCategory" label="Продукты" name="products">
           // TODO
@@ -20,7 +39,6 @@ import {Notification} from "element-ui";
             </el-form-item>
             <el-form-item>
               <el-checkbox label="Опубликован" v-model="category.published" name="type"></el-checkbox>
-              <el-checkbox label="Удалён" v-model="category.deleted" name="type"></el-checkbox>
               <el-checkbox label="Скрыть из меню" v-model="category.hideMenu" name="type"></el-checkbox>
             </el-form-item>
             <el-form-item label="Порядок сортировки">
@@ -35,14 +53,14 @@ import {Notification} from "element-ui";
                        @check="onCheckChange"
                        :props="treeProps"></el-tree>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSave">Сохранить</el-button>
-            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>
       </div>
-    `
+    `,
+    components: {
+        Toolbar
+    }
 })
 export default class CategoryView extends Vue {
 
@@ -67,8 +85,6 @@ export default class CategoryView extends Vue {
         sortIndex: 0,
         parent: null
     };
-    /** Данные дерева категорий */
-    private catTree: CategoryTreeItem[] = [];
     /** Настройка дерева категорий */
     private treeProps = {
         children: "childs",
@@ -76,17 +92,59 @@ export default class CategoryView extends Vue {
     };
 
     async created() {
-        this.catTree = await this.categoryService.getCategoriesTree();
         if (!this.isNewCategory) {
-            this.category = await this.categoryService.getCategory(this.$route.params.id);
+            await this.loadCategory();
         }
     }
 
+    /**
+     * Обработчик изменения чекбокса
+     * @param checkedItem выбранный чекбокс
+     */
     private onCheckChange(checkedItem: CategoryTreeItem) {
         this.$refs.tree.setCheckedKeys([]);
         this.$refs.tree.setCheckedKeys([checkedItem.id]);
     }
 
+    /**
+     * Обработчик переноса в корзину
+     */
+    private async onDelete() {
+        await this.categoryService.moveToTrash([this.$route.params.id]);
+        await this.refreshOnChange();
+        Notification.warning("Категория перемещена в корзину");
+    }
+
+    /**
+     * Обработчик востановления
+     */
+    private async onRestore() {
+        this.category = await this.categoryService.saveCategory({
+            ...this.category,
+            deleted: false
+        });
+        await this.refreshOnChange();
+        Notification.warning("Категория востановлена");
+    }
+
+    /**
+     * Загрузка категории
+     */
+    private async loadCategory() {
+        this.category = await this.categoryService.getCategory(this.$route.params.id);
+    }
+
+    /**
+     * Обновление категории и меню категорий
+     */
+    private async refreshOnChange() {
+        await this.loadCategory();
+        store.state.categories = await this.categoryService.getCategoriesTree();
+    }
+
+    /**
+     * Возвращает активный таб
+     */
     private get activeTab(): string {
         if (this.isNewCategory) {
             return "editor";
@@ -94,12 +152,16 @@ export default class CategoryView extends Vue {
         return "products";
     }
 
+    /**
+     * Обработчик сохранения
+     */
     private async onSave() {
         const [parent] = this.$refs.tree.getCheckedKeys() as number[];
         const savedCat = await this.categoryService.saveCategory({
             ...this.category,
             parent
         });
+        await this.refreshOnChange();
         Notification.success("Категория сохранена");
         await this.$router.push({
             name: "CategoryView",
@@ -109,7 +171,13 @@ export default class CategoryView extends Vue {
         });
     }
 
+    /** Признак новой категории */
     private get isNewCategory(): boolean {
         return !this.$route.params.id;
+    }
+
+    /** Данные дерева категорий */
+    private get catTree(): CategoryTreeItem[] {
+        return store.state.categories;
     }
 }

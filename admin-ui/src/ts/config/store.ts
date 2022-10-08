@@ -4,12 +4,14 @@ import axios from "axios";
 import {LoginRequest, TokenInfo, AuthService} from "@/ts/services/AuthService";
 import {Container} from "typescript-ioc";
 import router from "@/ts/config/router";
+import {CategoryTreeItem} from "@/ts/services/CategoryService";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        tokenInfo: null
+        tokenInfo: null,
+        categories: []
     } as State,
     getters: {},
     mutations: {},
@@ -44,4 +46,6 @@ export default new Vuex.Store({
 export type State = {
     /** Информация о токене */
     tokenInfo: TokenInfo | null;
+    /** Категории */
+    categories: CategoryTreeItem[];
 }

@@ -1,6 +1,7 @@
 import {Component, Vue} from "vue-property-decorator";
 import {Inject} from "typescript-ioc";
 import {CategoryService, CategoryTreeItem} from "@/ts/services/CategoryService";
+import store from "@/ts/config/store";
 
 @Component({
     template: `
@@ -15,7 +16,11 @@ import {CategoryService, CategoryTreeItem} from "@/ts/services/CategoryService";
           <el-tree :data="catTree"
                    @node-click="onMenuClick"
                    :expand-on-click-node="false"
-                   :props="treeProps"></el-tree>
+                   :props="treeProps">
+            <span class="custom-tree-node" slot-scope=" { node, data }">
+                <span :class="getCategoryClass(data)">{{data.title}} ({{data.id}})</span>
+            </span>
+          </el-tree>
         </el-submenu>
         <el-menu-item index="2">
           <i class="el-icon-s-goods"></i>
@@ -41,8 +46,6 @@ export default class Navigation extends Vue {
 
     /** Сервис по работе с книгами */
     @Inject private readonly categoryService: CategoryService;
-    /** Данные дерева категорий */
-    private catTree: CategoryTreeItem[] = [];
     /** Настройка дерева категорий */
     private treeProps = {
         children: "childs",
@@ -50,7 +53,7 @@ export default class Navigation extends Vue {
     };
 
     async created() {
-        this.catTree = await this.categoryService.getCategoriesTree();
+        store.state.categories = await this.categoryService.getCategoriesTree();
     }
 
     private onMenuClick(category: CategoryTreeItem) {
@@ -65,5 +68,24 @@ export default class Navigation extends Vue {
         this.$router.push({
             name: "CategoryView"
         });
+    }
+
+    private getCategoryClass(category: CategoryTreeItem) {
+        const classes: string[] = [];
+        if (category.deleted) {
+            classes.push("deleted");
+        }
+        if (category.hideMenu) {
+            classes.push("hiddenMenu");
+        }
+        if (!category.published) {
+            classes.push("notPublished");
+        }
+        return classes.join(" ");
+    }
+
+    /** Данные дерева категорий */
+    private get catTree(): CategoryTreeItem[] {
+        return store.state.categories;
     }
 }

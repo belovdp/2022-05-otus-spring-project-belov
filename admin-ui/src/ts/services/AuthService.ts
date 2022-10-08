@@ -8,21 +8,22 @@ import axios from "axios";
 @OnlyInstantiableByContainer
 export class AuthService {
 
-    /** Axios без interceptor */
+    /** Axios без interceptor и очищающий заголовок авторизации */
     private http = axios.create({
-        transformRequest: (data, headers) => {
+        transformRequest: [(data, headers) => {
             if (headers) {
                 delete headers.common["Authorization"];
             }
             return data;
         }
+        ].concat(axios.defaults.transformRequest || [])
     });
 
     /**
      * Возвращает токен на основе логина и пароля
      */
     async login(request: LoginRequest): Promise<TokenInfo> {
-        const tokenInfo = (await this.http.post<TokenInfoResponse>("/user-service/users/token", request)).data;
+        const tokenInfo = (await this.http.post<TokenInfoResponse>("/user-service/users/token", {...request})).data;
         return AuthService.convertTokenResponse(tokenInfo);
     }
 

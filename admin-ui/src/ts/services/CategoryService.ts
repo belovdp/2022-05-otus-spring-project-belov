@@ -24,6 +24,14 @@ export class CategoryService {
     }
 
     /**
+     * Переносит в корзину
+     * @param ids идентификаторы категории
+     */
+    async moveToTrash(ids: number[]): Promise<void> {
+        await axios.post("/product-service/admin/categories/trash", ids);
+    }
+
+    /**
      * Сохраняет категорию
      * @param categoryItem сохраняемая категория
      */

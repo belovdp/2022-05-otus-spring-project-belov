@@ -56,7 +56,7 @@ public class AdminCategoryController {
      * Переносит категории в корзину
      */
     @PostMapping("/trash")
-    public void getTrash(@RequestBody List<Long> ids) {
+    public void moveToTrash(@RequestBody List<Long> ids) {
         categoryService.moveToTrash(ids);
     }
 

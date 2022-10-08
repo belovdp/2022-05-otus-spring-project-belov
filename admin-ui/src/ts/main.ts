@@ -1,6 +1,6 @@
 import "@/style/styles.scss";
 import "@/style/img/favicon.ico";
-import "element-ui/lib/theme-chalk/index.css";
+//import "element-ui/lib/theme-chalk/index.css";
 import App from "@/ts/App";
 import axios, {AxiosError} from "axios";
 import Element, {Notification} from "element-ui";

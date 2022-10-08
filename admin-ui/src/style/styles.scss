@@ -25,9 +25,26 @@ html, body, #app {
   }
   .el-menu {
     margin-left: 15px;
+    .hiddenMenu {
+      color: #6666;
+    }
+    .notPublished {
+      color: #6666;
+    }
+    .deleted {
+      color: red;
+      text-decoration: line-through;
+      text-decoration-color: red;
+    }
   }
 }
 
 .mainContent {
   padding: 15px;
+}
+
+.toolbar .buttons {
+  display: flex;
+  justify-content: right;
+  align-items: center;
 }
