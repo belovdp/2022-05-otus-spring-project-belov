@@ -115,7 +115,7 @@ module.exports = env => {
       new HtmlWebpackPlugin({
         inject: "body",
         template: "index.html",
-        title: "Hello-world"
+        title: "Админка"
       }),
 
       // Запускает проверку кода через eslint

@@ -1,72 +1,54 @@
 import "@/style/img/logo.png";
 import {Component, Vue} from "vue-property-decorator";
 import {Inject} from "typescript-ioc";
-import {CategoryItem, CategoryService, CategoryTreeItem} from "@/ts/services/CategoryService";
+import {CategoryItem, CategoryService} from "@/ts/services/CategoryService";
 import {Route} from "vue-router";
-import {ElTree, TreeData} from "element-ui/types/tree";
-import {Notification} from "element-ui";
-import store from "@/ts/config/store";
 import Toolbar from "@/ts/components/common/Toolbar";
+import CategoryForm from "@/ts/components/CategoryForm";
+import ProductList from "@/ts/components/ProductList";
 
 @Component({
     template: `
       <div class="categoryView">
       <toolbar :title="category.title">
-        <el-button-group slot="buttons">
+        <el-button-group v-if="activeTab === 'editor'" slot="buttons">
           <el-button v-if="!category.deleted"
                      type="primary"
                      size="mini"
                      icon="el-icon-check"
                      round
-                     @click="onSave">Сохранить</el-button>
+                     @click="onSave">Сохранить
+          </el-button>
           <el-button v-if="!isNewCategory && category.deleted"
                      type="warning"
                      size="mini"
                      icon="el-icon-upload2"
                      round
-                     @click="onRestore">Востановить</el-button>
+                     @click="onRestore">Востановить
+          </el-button>
           <el-button v-if="!isNewCategory && !category.deleted" type="danger" size="mini" icon="el-icon-delete-solid" round @click="onDelete"></el-button>
         </el-button-group>
       </toolbar>
-      <el-tabs :value="activeTab">
-        <el-tab-pane v-if="!isNewCategory" label="Продукты" name="products">
-          // TODO
-        </el-tab-pane>
+      <el-tabs v-model="activeTab">
         <el-tab-pane label="Редактор" name="editor">
-          <el-form v-if="category" label-position="top" label-width="100px" :model="category">
-            <el-form-item label="Заголовок">
-              <el-input v-model="category.title"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-checkbox label="Опубликован" v-model="category.published" name="type"></el-checkbox>
-              <el-checkbox label="Скрыть из меню" v-model="category.hideMenu" name="type"></el-checkbox>
-            </el-form-item>
-            <el-form-item label="Порядок сортировки">
-              <el-input-number v-model="category.sortIndex"></el-input-number>
-            </el-form-item>
-            <el-form-item label="Родитель">
-              <el-tree ref="tree"
-                       :data="catTree"
-                       show-checkbox
-                       node-key="id"
-                       check-strictly
-                       :default-checked-keys="[category.parent]"
-                       @check="onCheckChange"
-                       :props="treeProps"></el-tree>
-            </el-form-item>
-          </el-form>
+          <category-form ref="form" :category="category" @changed="onChanged"/>
+        </el-tab-pane>
+        <el-tab-pane v-if="category.id" label="Продукты" name="products">
+          <product-list :category-id="category.id"/>
         </el-tab-pane>
       </el-tabs>
       </div>
     `,
     components: {
-        Toolbar
+        Toolbar,
+        CategoryForm,
+        ProductList
     }
 })
 export default class CategoryView extends Vue {
 
     $refs: {
-        tree: ElTree<unknown, TreeData>
+        form: CategoryForm
     };
     $route: Route & {
         params: {
@@ -86,128 +68,51 @@ export default class CategoryView extends Vue {
         sortIndex: 0,
         parent: null
     };
-    /** Настройка дерева категорий */
-    private treeProps = {
-        children: "childs",
-        label: "title"
-    };
+    private activeTab = "editor";
 
     async created() {
         if (!this.isNewCategory) {
-            await this.loadCategory();
+            this.category = await this.categoryService.getCategory(this.$route.params.id);
         }
-    }
-
-    /**
-     * Обработчик изменения чекбокса
-     * @param checkedItem выбранный чекбокс
-     */
-    private onCheckChange(checkedItem: CategoryTreeItem) {
-        this.$refs.tree.setCheckedKeys([]);
-        this.$refs.tree.setCheckedKeys([checkedItem.id]);
     }
 
     /**
      * Обработчик переноса в корзину
      */
     private async onDelete() {
-        await this.categoryService.moveToTrash([this.$route.params.id]);
-        await this.refreshOnChange();
-        Notification.warning("Категория перемещена в корзину");
+        await this.$refs.form.delete();
     }
 
     /**
      * Обработчик востановления
      */
     private async onRestore() {
-        this.category = await this.categoryService.saveCategory({
-            ...this.category,
-            deleted: false
-        });
-        await this.refreshOnChange();
-        Notification.warning("Категория востановлена");
-    }
-
-    /**
-     * Загрузка категории
-     */
-    private async loadCategory() {
-        this.category = await this.categoryService.getCategory(this.$route.params.id);
-    }
-
-    /**
-     * Обновление категории и меню категорий
-     */
-    private async refreshOnChange() {
-        await this.loadCategory();
-        store.state.categories = await this.categoryService.getCategoriesTree();
-    }
-
-    /**
-     * Возвращает активный таб
-     */
-    private get activeTab(): string {
-        if (this.isNewCategory) {
-            return "editor";
-        }
-        return "products";
+        await this.$refs.form.restore();
     }
 
     /**
      * Обработчик сохранения
      */
     private async onSave() {
-        const [parent] = this.$refs.tree.getCheckedKeys() as number[];
-        const savedCat = await this.categoryService.saveCategory({
-            ...this.category,
-            parent
-        });
-        await this.refreshOnChange();
-        Notification.success("Категория сохранена");
-        await this.$router.push({
-            name: "CategoryView",
-            params: {
-                id: String(savedCat.id)
-            }
-        });
+        await this.$refs.form.save();
     }
+
+    private onChanged(category: CategoryItem) {
+        this.category = category;
+    }
+
+    // /**
+    //  * Возвращает активный таб
+    //  */
+    // private get activeTab(): string {
+    //     if (this.isNewCategory) {
+    //         return "editor";
+    //     }
+    //     return "products";
+    // }
 
     /** Признак новой категории */
     private get isNewCategory(): boolean {
         return !this.$route.params.id;
-    }
-
-    /** Данные дерева категорий */
-    private get catTree(): CategoryTreeItem[] {
-        const categories = JSON.parse(JSON.stringify(store.state.categories));
-        const nodeToDisable = this.findNodeById(categories, this.$route.params.id);
-        if (nodeToDisable) {
-            this.disableNode([nodeToDisable]);
-        }
-        return categories;
-    }
-
-    private findNodeById(categories: CategoryTreeItem[], id: number): CategoryTreeItem | null {
-        for (const category of categories) {
-            if (String(category.id) === String(id)) {
-                return category;
-            }
-            if (category.childs) {
-                const resultFromChilds = this.findNodeById(category.childs, id);
-                if (resultFromChilds) {
-                    return resultFromChilds;
-                }
-            }
-        }
-        return null;
-    }
-
-    private disableNode(categories: (CategoryTreeItem & {disabled?: boolean})[]) {
-        categories.forEach(category => {
-            category.disabled = true;
-            if (category.childs) {
-                this.disableNode(category.childs);
-            }
-        });
     }
 }

@@ -82,3 +82,9 @@ html, body, #app {
     }
   }
 }
+
+.productList {
+  > .el-button-group {
+    margin-bottom: 10px;
+  }
+}
