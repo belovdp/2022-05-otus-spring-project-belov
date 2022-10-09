@@ -4,6 +4,7 @@ import {Inject} from "typescript-ioc";
 import PageableTable, {SpringPageable, TableData} from "@/ts/components/common/PageableTable";
 import {ProductItem, ProductService} from "@/ts/services/ProductService";
 import {booleanFormatter, rubFormatter} from "@/ts/utils/formatters";
+import {Notification} from "element-ui";
 
 @Component({
     template: `
@@ -55,6 +56,7 @@ export default class ProductList extends Vue {
     private selected: ProductItem[] = [];
     /** Форматтер да или нет */
     private readonly booleanFormatter = booleanFormatter;
+    /** Форматтер цен */
     private readonly rubFormatter = rubFormatter;
 
     private async loadProducts(pageable: SpringPageable): Promise<TableData<ProductItem>> {
@@ -70,5 +72,6 @@ export default class ProductList extends Vue {
         await this.productService.moveToTrash(this.selected.map(item => item.id));
         this.selected = [];
         await this.$refs.table.refresh(false);
+        Notification.success("Продукты перемещены в корзину");
     }
 }

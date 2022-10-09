@@ -30,7 +30,7 @@ import store from "@/ts/config/store";
           <i class="el-icon-user-solid"></i>
           <span slot="title">Пользователи</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="/product/trash">
           <i class="el-icon-delete-solid"></i>
           <span slot="title">Корзина товаров</span>
         </el-menu-item>

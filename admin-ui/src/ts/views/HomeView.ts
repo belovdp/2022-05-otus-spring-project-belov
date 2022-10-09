@@ -4,7 +4,6 @@ import { Component, Vue } from "vue-property-decorator";
 @Component({
     template: `
     <div class="home">
-      <img alt="Vue logo" src="/static/logo.png">
     </div>
   `
 })
