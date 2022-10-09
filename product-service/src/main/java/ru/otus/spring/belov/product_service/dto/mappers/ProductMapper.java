@@ -17,13 +17,6 @@ import java.util.List;
 public interface ProductMapper {
 
     /**
-     * Конвертирует список продуктов в dto
-     * @param products продукты
-     * @return список продуктов dto
-     */
-    List<ProductItem> productToProductItem(List<Product> products);
-
-    /**
      * Конвертирует продукт в dto
      * @param products продукты
      * @return продукт dto

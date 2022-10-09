@@ -3,6 +3,7 @@ package ru.otus.spring.belov.product_service.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,14 @@ public class Product {
     /** Заголовок */
     @Column(name = "title", nullable = false)
     private String title;
+
+    /** Описание */
+    @Column(name = "description")
+    private String description;
+
+    /** Цена */
+    @Column(name = "price")
+    private BigDecimal price;
 
     /** Признак что ресурс в корзине */
     @Column(name = "deleted")

@@ -41,6 +41,12 @@ public interface ProductService {
     void moveToTrash(List<Long> ids);
 
     /**
+     * Переводит продукты из корзины
+     * @param ids идентификаторы продуктов
+     */
+    void restoreTrash(List<Long> ids);
+
+    /**
      * Удаляет продукты
      * @param ids идентификаторы продуктов
      */

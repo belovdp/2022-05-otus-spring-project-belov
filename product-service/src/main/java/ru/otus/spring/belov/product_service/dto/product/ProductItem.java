@@ -2,6 +2,8 @@ package ru.otus.spring.belov.product_service.dto.product;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 /**
  * Продукт
  */
@@ -20,4 +22,8 @@ public class ProductItem {
     private boolean published;
     /** Индекс сортировки */
     private int sortIndex;
+    /** Описание */
+    private String description;
+    /** Цена */
+    private BigDecimal price;
 }

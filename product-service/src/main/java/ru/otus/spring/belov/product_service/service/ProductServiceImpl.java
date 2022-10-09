@@ -58,10 +58,16 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllByDeletedTrue(pageable).map(productMapper::productToProductItem);
     }
 
-    @Override
     @Transactional
+    @Override
     public void moveToTrash(List<Long> ids) {
-        productRepository.moveToTrash(ids);
+        productRepository.modifyDeleteFlag(ids, true);
+    }
+
+    @Transactional
+    @Override
+    public void restoreTrash(List<Long> ids) {
+        productRepository.modifyDeleteFlag(ids, false);
     }
 
     @Override

@@ -3,7 +3,7 @@ import {Component, Prop, Vue} from "vue-property-decorator";
 import {Inject} from "typescript-ioc";
 import PageableTable, {SpringPageable, TableData} from "@/ts/components/common/PageableTable";
 import {ProductItem, ProductService} from "@/ts/services/ProductService";
-import {booleanFormatter} from "@/ts/utils/formatters";
+import {booleanFormatter, rubFormatter} from "@/ts/utils/formatters";
 
 @Component({
     template: `
@@ -29,6 +29,7 @@ import {booleanFormatter} from "@/ts/utils/formatters";
             </el-table-column>
             <el-table-column prop="id" label="ID" width="100" sortable="custom"></el-table-column>
             <el-table-column prop="title" label="Название" sortable="custom"></el-table-column>
+            <el-table-column prop="price" align="right" label="Цена" :formatter="rubFormatter" sortable="custom"></el-table-column>
             <el-table-column prop="published" label="Опубликован" :formatter="booleanFormatter" sortable="custom"></el-table-column>
             <el-table-column prop="sortIndex" label="Порядок вывода" sortable="custom"></el-table-column>
           </pageable-table>
@@ -54,6 +55,7 @@ export default class ProductList extends Vue {
     private selected: ProductItem[] = [];
     /** Форматтер да или нет */
     private readonly booleanFormatter = booleanFormatter;
+    private readonly rubFormatter = rubFormatter;
 
     private async loadProducts(pageable: SpringPageable): Promise<TableData<ProductItem>> {
         const filter = this.categoryId ? {categoryId: this.categoryId, deleted: false} : {};

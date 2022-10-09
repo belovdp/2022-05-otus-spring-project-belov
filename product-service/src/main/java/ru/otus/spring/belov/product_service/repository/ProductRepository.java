@@ -23,9 +23,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Queryds
     Page<Product> findAllByDeletedTrue(Pageable pageable);
 
     /**
-     * Переносит продукты в корзину
+     * Переносит продукты в корзину или из карзины
      */
     @Modifying
-    @Query("update Product p set p.deleted = true where p.id in :ids")
-    void moveToTrash(@Param("ids") List<Long> ids);
+    @Query("update Product p set p.deleted = :deleted where p.id in :ids")
+    void modifyDeleteFlag(@Param("ids") List<Long> ids, @Param("deleted") boolean deleted);
 }

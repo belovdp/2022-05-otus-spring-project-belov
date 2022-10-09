@@ -60,8 +60,17 @@ public class AdminProductController {
      * Переносит категории в корзину
      */
     @PostMapping("/trash")
-    public void getTrash(@RequestBody List<Long> ids) {
+    public void moveToTrash(@RequestBody List<Long> ids) {
         productService.moveToTrash(ids);
+    }
+
+    /**
+     * Востанавливает из корзины
+     * @param ids идентификаторы категорий
+     */
+    @PostMapping("/trash/restore")
+    public void restoreTrash(@RequestBody List<Long> ids) {
+        productService.restoreTrash(ids);
     }
 
     /**
