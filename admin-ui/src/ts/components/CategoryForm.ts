@@ -6,6 +6,7 @@ import {ElTree, TreeData} from "element-ui/types/tree";
 import {Notification} from "element-ui";
 import store from "@/ts/config/store";
 import Toolbar from "@/ts/components/common/Toolbar";
+import {TreeUtils} from "@/ts/utils/TreeUtils";
 
 @Component({
     template: `
@@ -118,35 +119,11 @@ export default class CategoryForm extends Vue {
     private get catTree(): CategoryTreeItem[] {
         const categories = JSON.parse(JSON.stringify(store.state.categories));
         if (this.category.id) {
-            const nodeToDisable = this.findNodeById(categories, this.category.id);
+            const nodeToDisable = TreeUtils.findNodeById<CategoryTreeItem>(categories, this.category.id);
             if (nodeToDisable) {
-                this.disableNode([nodeToDisable]);
+                TreeUtils.disableNode([nodeToDisable]);
             }
         }
         return categories;
-    }
-
-    private findNodeById(categories: CategoryTreeItem[], id: number): CategoryTreeItem | null {
-        for (const category of categories) {
-            if (String(category.id) === String(id)) {
-                return category;
-            }
-            if (category.childs) {
-                const resultFromChilds = this.findNodeById(category.childs, id);
-                if (resultFromChilds) {
-                    return resultFromChilds;
-                }
-            }
-        }
-        return null;
-    }
-
-    private disableNode(categories: (CategoryTreeItem & {disabled?: boolean})[]) {
-        categories.forEach(category => {
-            category.disabled = true;
-            if (category.childs) {
-                this.disableNode(category.childs);
-            }
-        });
     }
 }

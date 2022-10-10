@@ -33,6 +33,13 @@ import {Notification} from "element-ui";
             <el-table-column prop="price" align="right" label="Цена" :formatter="rubFormatter" sortable="custom"></el-table-column>
             <el-table-column prop="published" label="Опубликован" :formatter="booleanFormatter" sortable="custom"></el-table-column>
             <el-table-column prop="sortIndex" label="Порядок вывода" sortable="custom"></el-table-column>
+            <el-table-column
+                label="Действия"
+                width="320">
+                <template slot-scope="scope">
+                  <el-button type="text" size="small" @click="onEdit(scope.row.id)">Редактировать</el-button>
+                </template>
+            </el-table-column>
           </pageable-table>
       </div>
     `,
@@ -69,9 +76,16 @@ export default class ProductList extends Vue {
     }
 
     private async onDelete(): Promise<void> {
-        await this.productService.moveToTrash(this.selected.map(item => item.id));
+        await this.productService.moveToTrash(this.selected.map(item => item.id) as number[]);
         this.selected = [];
         await this.$refs.table.refresh(false);
         Notification.success("Продукты перемещены в корзину");
+    }
+
+    private async onEdit(id: string): Promise<void> {
+        await this.$router.push({
+            name: "ProductView",
+            params: {id}
+        });
     }
 }

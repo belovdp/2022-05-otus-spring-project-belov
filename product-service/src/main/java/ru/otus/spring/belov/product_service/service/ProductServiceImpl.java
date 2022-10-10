@@ -15,7 +15,7 @@ import ru.otus.spring.belov.product_service.domain.QProduct;
 import ru.otus.spring.belov.product_service.dto.mappers.ProductMapper;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
-import ru.otus.spring.belov.product_service.dto.product.SaveProductRequest;
+import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
 import ru.otus.spring.belov.product_service.exceptions.ApplicationException;
 import ru.otus.spring.belov.product_service.repository.CategoryRepository;
 import ru.otus.spring.belov.product_service.repository.ProductRepository;
@@ -47,10 +47,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @PostAuthorize("hasAnyRole('VIEWER', 'EDITOR', 'ADMIN') or ((returnObject.deleted == false) and (returnObject.published = true))")
-    public ProductItem getProductById(Long id) {
+    public ProductItemFull getProductById(Long id) {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Товар не найден"));
-        return productMapper.productToProductItem(product);
+        return productMapper.productToProductItemFull(product);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void saveProduct(SaveProductRequest saveProductRequest) {
+    public ProductItemFull saveProduct(ProductItemFull saveProductRequest) {
         var product = ofNullable(saveProductRequest.getId())
                 .map(id -> productRepository.findById(id)
                         .orElseThrow(() ->
@@ -90,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
                 .map(categoryRepository::findAllById)
                 .orElse(null);
         productMapper.updateProductFromDto(saveProductRequest, categories, product);
-        productRepository.save(product);
+        return productMapper.productToProductItemFull(productRepository.save(product));
     }
 
     private Predicate getProductPredicate(ProductFilter productFilter) {

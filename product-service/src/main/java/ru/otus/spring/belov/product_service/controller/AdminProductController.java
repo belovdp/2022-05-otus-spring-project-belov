@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
-import ru.otus.spring.belov.product_service.dto.product.SaveProductRequest;
+import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
 import ru.otus.spring.belov.product_service.service.ProductServiceImpl;
 
 import javax.validation.Valid;
@@ -43,7 +43,7 @@ public class AdminProductController {
      * @return продукт
      */
     @GetMapping("/{id}")
-    public ProductItem getProduct(@PathVariable Long id) {
+    public ProductItemFull getProduct(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
@@ -86,8 +86,7 @@ public class AdminProductController {
      * @param saveProductRequest запрос на сохранение/обновление категорий
      */
     @PostMapping("/")
-    public void save(@RequestBody SaveProductRequest saveProductRequest) {
-        productService.saveProduct(saveProductRequest);
+    public ProductItemFull save(@RequestBody ProductItemFull saveProductRequest) {
+        return productService.saveProduct(saveProductRequest);
     }
-
 }

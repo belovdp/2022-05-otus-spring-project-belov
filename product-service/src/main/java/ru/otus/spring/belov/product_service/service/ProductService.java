@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
-import ru.otus.spring.belov.product_service.dto.product.SaveProductRequest;
+import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public interface ProductService {
      * @param id идентификатор продукта
      * @return продукт
      */
-    ProductItem getProductById(Long id);
+    ProductItemFull getProductById(Long id);
 
     /**
      * Возвращает продукты из корзины
@@ -56,5 +56,5 @@ public interface ProductService {
      * Возвращает сохранённый/изменённый продукт
      * @param saveProductRequest запрос на изменение/сохранение
      */
-    void saveProduct(SaveProductRequest saveProductRequest);
+    ProductItemFull saveProduct(ProductItemFull saveProductRequest);
 }

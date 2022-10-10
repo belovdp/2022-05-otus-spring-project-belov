@@ -27,8 +27,8 @@ export class ProductService {
      * Возвращает продукт
      * @param id идентификатор продукта
      */
-    async getProduct(id: number): Promise<ProductItem> {
-        return (await axios.get<ProductItem>(`/product-service/products/${id}`)).data;
+    async getProduct(id: number): Promise<ProductItemFull> {
+        return (await axios.get<ProductItemFull>(`/product-service/products/${id}`)).data;
     }
 
     /**
@@ -70,7 +70,7 @@ export class ProductService {
      * Сохраняет категорию
      * @param product сохраняемый продукт
      */
-    async saveProduct(product: SaveProductRequest): Promise<ProductItem> {
+    async saveProduct(product: ProductItemFull): Promise<ProductItem> {
         return (await axios.post<ProductItem>("/product-service/admin/products/", product)).data;
     }
 }
@@ -88,7 +88,7 @@ export type ProductFilter = {
 /** Продукт */
 export type ProductItem = {
     /** Идентификатор */
-    id: number;
+    id: number | null;
     /** Заголовок */
     title: string;
     /** Признак что ресурс в корзине */
@@ -99,7 +99,10 @@ export type ProductItem = {
     sortIndex: number;
 }
 
-export type SaveProductRequest = ProductItem & {
+/** Продукт для редактирования */
+export type ProductItemFull = ProductItem & {
+    /** Описание */
+    description: string;
     /** Список идентификаторов категорий */
     categories: number[];
 }

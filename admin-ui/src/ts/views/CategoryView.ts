@@ -1,4 +1,3 @@
-import "@/style/img/logo.png";
 import {Component, Vue} from "vue-property-decorator";
 import {Inject} from "typescript-ioc";
 import {CategoryItem, CategoryService} from "@/ts/services/CategoryService";
@@ -100,16 +99,6 @@ export default class CategoryView extends Vue {
     private onChanged(category: CategoryItem) {
         this.category = category;
     }
-
-    // /**
-    //  * Возвращает активный таб
-    //  */
-    // private get activeTab(): string {
-    //     if (this.isNewCategory) {
-    //         return "editor";
-    //     }
-    //     return "products";
-    // }
 
     /** Признак новой категории */
     private get isNewCategory(): boolean {
