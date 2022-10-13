@@ -9,6 +9,8 @@ import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
 import ru.otus.spring.belov.product_service.service.ProductServiceImpl;
 
+import java.util.List;
+
 /**
  * Контроллер для работы с продуктами
  */
@@ -40,5 +42,10 @@ public class ProductController {
     @GetMapping("/{id}")
     public ProductItemFull getProduct(@PathVariable Long id) {
         return productService.getProductById(id);
+    }
+
+    @GetMapping("/list")
+    public List<ProductItem> getProducts(@RequestParam(name = "ids") List<Long> ids) {
+        return productService.getActiveProductsByIds(ids);
     }
 }

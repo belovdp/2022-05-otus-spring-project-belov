@@ -21,6 +21,7 @@ import ru.otus.spring.belov.product_service.repository.CategoryRepository;
 import ru.otus.spring.belov.product_service.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Optional.ofNullable;
 
@@ -51,6 +52,16 @@ public class ProductServiceImpl implements ProductService {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> new ApplicationException("Товар не найден"));
         return productMapper.productToProductItemFull(product);
+    }
+
+    @Override
+    public List<ProductItem> getActiveProductsByIds(List<Long> ids) {
+        var qProduct = QProduct.product;
+        var predicate = Objects.requireNonNull(new BooleanBuilder(qProduct.deleted.eq(false))
+                .and(qProduct.published.eq(true))
+                .and(qProduct.id.in(ids))
+                .getValue());
+        return productMapper.productsToProductItems(productRepository.findAll(predicate));
     }
 
     @Override

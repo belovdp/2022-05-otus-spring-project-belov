@@ -14,6 +14,7 @@ import AxiosInterceptor from "@/ts/config/axiosInterceptor";
 
 // TODO иногда проскакивает 401
 // TODO использовать роли токена
+// TODO увеличить время жизни refresh_token
 
 Vue.config.productionTip = false;
 

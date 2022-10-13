@@ -26,6 +26,13 @@ public interface ProductMapper {
     ProductItem productToProductItem(Product products);
 
     /**
+     * Конвертирует продукты в dto
+     * @param products продукты
+     * @return продукты dto
+     */
+    List<ProductItem> productsToProductItems(List<Product> products);
+
+    /**
      * Конвертирует продукт в dto максимально полное для отображения
      * @param products продукты
      * @return продукт dto

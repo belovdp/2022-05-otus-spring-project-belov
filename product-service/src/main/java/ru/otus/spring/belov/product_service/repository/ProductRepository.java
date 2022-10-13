@@ -1,5 +1,6 @@
 package ru.otus.spring.belov.product_service.repository;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Queryds
     @Modifying
     @Query("update Product p set p.deleted = :deleted where p.id in :ids")
     void modifyDeleteFlag(@Param("ids") List<Long> ids, @Param("deleted") boolean deleted);
+
+    @Override
+    List<Product> findAll(Predicate predicate);
 }

@@ -29,6 +29,13 @@ public interface ProductService {
     ProductItemFull getProductById(Long id);
 
     /**
+     * Возвращает действующие продукты
+     * @param ids идентификаторы продуктов
+     * @return продукты
+     */
+    List<ProductItem> getActiveProductsByIds(List<Long> ids);
+
+    /**
      * Возвращает продукты из корзины
      * @return продукты из корзины
      */
