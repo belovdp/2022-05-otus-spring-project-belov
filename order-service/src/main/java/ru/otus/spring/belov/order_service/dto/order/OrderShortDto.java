@@ -3,18 +3,16 @@ package ru.otus.spring.belov.order_service.dto.order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import ru.otus.spring.belov.order_service.dto.user.UserInfoDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
- * Заказ
+ * Заказ в укороченном виде
  */
 @AllArgsConstructor
 @Setter
 @Getter
-public class OrderDto {
+public class OrderShortDto {
 
     /** Идентификатор */
     private Long id;
@@ -32,8 +30,4 @@ public class OrderDto {
     private String userId;
     /** Имя контактного лица */
     private String username;
-    /** Подробная информация о пользователе */
-    private UserInfoDto userInfo;
-    /** Продукты в заказе */
-    private List<OrderItemDto> items;
 }

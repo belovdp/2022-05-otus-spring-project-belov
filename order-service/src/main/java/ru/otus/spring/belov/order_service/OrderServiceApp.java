@@ -7,7 +7,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * Приложение по управлению заказами
- * TODO обоготить заказ для админки информацией о пользователе
  */
 @SpringBootApplication
 @EnableDiscoveryClient

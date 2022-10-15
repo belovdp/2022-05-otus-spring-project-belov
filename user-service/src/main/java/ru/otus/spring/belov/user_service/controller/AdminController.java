@@ -23,6 +23,16 @@ public class AdminController {
     private final KeycloakAdminService keycloakAdminService;
 
     /**
+     * Возвращает пользователя по идентификатору
+     * @param id идентификатор
+     * @return пользователь
+     */
+    @GetMapping("/users/{id}")
+    public UserRepresentation getUser(@PathVariable String id) {
+        return keycloakAdminService.getUser(id);
+    }
+
+    /**
      * Возвращает список пользователей
      * @param pageable пагинация
      * @return список пользователей

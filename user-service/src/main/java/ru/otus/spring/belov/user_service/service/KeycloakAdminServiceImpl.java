@@ -61,6 +61,11 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService {
     }
 
     @Override
+    public UserRepresentation getUser(String id) {
+        return keycloak.realm(kcProperties.getRealm()).users().get(id).toRepresentation();
+    }
+
+    @Override
     public List<UserRepresentation> getUsers(Pageable pageable) {
         return keycloak.realm(kcProperties.getRealm())
                 .users()

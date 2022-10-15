@@ -4,11 +4,10 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.otus.spring.belov.order_service.domain.Order;
 import ru.otus.spring.belov.order_service.domain.OrderItem;
-import ru.otus.spring.belov.order_service.dto.order.CreateOrderRequest;
-import ru.otus.spring.belov.order_service.dto.order.OrderDto;
-import ru.otus.spring.belov.order_service.dto.order.OrderItemDto;
-import ru.otus.spring.belov.order_service.dto.order.UpdateOrderRequest;
+import ru.otus.spring.belov.order_service.dto.order.*;
+import ru.otus.spring.belov.order_service.dto.user.UserInfoDto;
 import ru.otus.spring.belov.order_service.feign.ProductServiceClient;
+import ru.otus.spring.belov.order_service.feign.UserServiceClient;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,8 @@ public abstract class OrderMapper {
     @Autowired
     private ProductServiceClient productServiceClient;
     @Autowired
+    private UserServiceClient userServiceClient;
+    @Autowired
     private ProductMapper productMapper;
 
     /**
@@ -29,7 +30,22 @@ public abstract class OrderMapper {
      * @param order заказ
      * @return заказ dto
      */
+    @Mapping(target = "userInfo", source = "order", qualifiedByName = "setUserInfo")
+    public abstract OrderDto orderToDtoWithUserInfo(Order order);
+
+    /**
+     * Конвертирует заказ в dto
+     * @param order заказ
+     * @return заказ dto
+     */
     public abstract OrderDto orderToDto(Order order);
+
+    /**
+     * Конвертирует заказ в dto без продуктов
+     * @param order заказ
+     * @return заказ dto без продуктов
+     */
+    public abstract OrderShortDto orderToShortDto(Order order);
 
     /**
      * Конвертирует товар заказа в dto
@@ -75,5 +91,10 @@ public abstract class OrderMapper {
     @AfterMapping
     void afterMapping(@MappingTarget Order order) {
         order.getItems().forEach(item ->  item.setOrder(order));
+    }
+
+    @Named("setUserInfo")
+    UserInfoDto setUserInfo(Order order) {
+        return userServiceClient.getUserInfo(order.getUserId());
     }
 }

@@ -23,6 +23,8 @@ export default class AxiosInterceptor {
                 throw new Error("Требуется авторизация");
             }
             await store.dispatch("REFRESH_TOKEN");
+            const commonHeaders = (config.headers!.common as unknown) as Record<string, string>;
+            commonHeaders.Authorization = `Bearer ${store.state.tokenInfo!.token}`;
         }
         return config;
     }

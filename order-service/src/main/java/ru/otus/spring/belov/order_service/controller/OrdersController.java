@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.order_service.dto.order.CreateOrderRequest;
 import ru.otus.spring.belov.order_service.dto.order.OrderDto;
+import ru.otus.spring.belov.order_service.dto.order.OrderShortDto;
 import ru.otus.spring.belov.order_service.service.OrderService;
 
 /**
@@ -36,7 +37,7 @@ public class OrdersController {
      * @return заказ
      */
     @GetMapping("/")
-    public Page<OrderDto> getOrders(Pageable pageable) {
+    public Page<OrderShortDto> getOrders(Pageable pageable) {
         return userOrderService.getOrders(pageable);
     }
 

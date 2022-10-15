@@ -49,6 +49,10 @@ management:
     logfile:
       enabled: true
 
+feign:
+  circuitbreaker:
+    enabled: true
+
 ---
 spring:
   config:

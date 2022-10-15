@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.otus.spring.belov.order_service.dto.mappers.OrderMapper;
 import ru.otus.spring.belov.order_service.dto.order.CreateOrderRequest;
 import ru.otus.spring.belov.order_service.dto.order.OrderDto;
+import ru.otus.spring.belov.order_service.dto.order.OrderShortDto;
 import ru.otus.spring.belov.order_service.dto.order.UpdateOrderRequest;
 import ru.otus.spring.belov.order_service.exceptions.ApplicationException;
 import ru.otus.spring.belov.order_service.repository.OrderRepository;
@@ -29,18 +30,18 @@ public class AdminOrderService implements OrderService {
     public OrderDto getOrder(Long orderId) {
         var order = orderRepository.findById(orderId)
             .orElseThrow(() -> new ApplicationException("Не найден заказ"));
-        return orderMapper.orderToDto(order);
+        return orderMapper.orderToDtoWithUserInfo(order);
     }
 
     @Override
-    public Page<OrderDto> getOrders(Pageable pageable) {
-        return orderRepository.findAll(pageable).map(orderMapper::orderToDto);
+    public Page<OrderShortDto> getOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable).map(orderMapper::orderToShortDto);
     }
 
     @Override
     public OrderDto create(CreateOrderRequest createOrderRequest) {
         var order = orderMapper.createRequestToOrder(createOrderRequest, null);
-        return orderMapper.orderToDto(orderRepository.save(order));
+        return orderMapper.orderToDtoWithUserInfo(orderRepository.save(order));
     }
 
     @Override
@@ -48,6 +49,6 @@ public class AdminOrderService implements OrderService {
         var order = orderRepository.findById(updateOrderRequest.getId())
                 .orElseThrow(() -> new ApplicationException("Не найден заказ"));
         orderMapper.updateOrderFromDto(updateOrderRequest, order);
-        return orderMapper.orderToDto(orderRepository.save(order));
+        return orderMapper.orderToDtoWithUserInfo(orderRepository.save(order));
     }
 }

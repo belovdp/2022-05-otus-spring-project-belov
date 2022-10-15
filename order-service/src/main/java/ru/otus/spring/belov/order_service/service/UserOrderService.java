@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.otus.spring.belov.order_service.dto.order.CreateOrderRequest;
 import ru.otus.spring.belov.order_service.dto.order.OrderDto;
 import ru.otus.spring.belov.order_service.dto.mappers.OrderMapper;
+import ru.otus.spring.belov.order_service.dto.order.OrderShortDto;
 import ru.otus.spring.belov.order_service.dto.order.UpdateOrderRequest;
 import ru.otus.spring.belov.order_service.exceptions.ApplicationException;
 import ru.otus.spring.belov.order_service.repository.OrderRepository;
@@ -35,9 +36,9 @@ public class UserOrderService implements OrderService {
     }
 
     @Override
-    public Page<OrderDto> getOrders(Pageable pageable) {
+    public Page<OrderShortDto> getOrders(Pageable pageable) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return orderRepository.findAllByUserId(userId, pageable).map(orderMapper::orderToDto);
+        return orderRepository.findAllByUserId(userId, pageable).map(orderMapper::orderToShortDto);
     }
 
     @Override

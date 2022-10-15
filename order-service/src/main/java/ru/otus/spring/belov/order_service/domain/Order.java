@@ -54,7 +54,6 @@ public class Order {
     private String username;
 
     /** Продукты в заказе */
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
 }

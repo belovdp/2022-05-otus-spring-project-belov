@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.otus.spring.belov.order_service.dto.order.CreateOrderRequest;
 import ru.otus.spring.belov.order_service.dto.order.OrderDto;
+import ru.otus.spring.belov.order_service.dto.order.OrderShortDto;
 import ru.otus.spring.belov.order_service.dto.order.UpdateOrderRequest;
 
 /**
@@ -23,7 +24,7 @@ public interface OrderService {
      * @param pageable пагинация
      * @return заказ
      */
-    Page<OrderDto> getOrders(Pageable pageable);
+    Page<OrderShortDto> getOrders(Pageable pageable);
 
     /**
      * Создаёт новый заказ

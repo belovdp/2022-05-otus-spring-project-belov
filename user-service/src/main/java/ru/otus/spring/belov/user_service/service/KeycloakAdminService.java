@@ -21,6 +21,13 @@ public interface KeycloakAdminService {
     TokenInfoResponse registerUser(RegisterUserRequest registerUserRequest);
 
     /**
+     * Возвращает пользователя по идентификатору
+     * @param id идентификатор
+     * @return пользователь
+     */
+    UserRepresentation getUser(String id);
+
+    /**
      * Возвращает список пользователей
      * @param pageable пагинация
      * @return список пользователей

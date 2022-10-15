@@ -22,8 +22,8 @@ module.exports = {
         "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
         // Отключаем for in для массивов
         "@typescript-eslint/no-for-in-array": "warn",
-        // Не ставим await в return
         "no-return-await": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
         // Никаких any
         "@typescript-eslint/no-explicit-any": "warn",
         // Настраиваем отступы
