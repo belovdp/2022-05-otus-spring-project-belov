@@ -41,8 +41,8 @@ export class AuthService {
      * @return информация о токене и когда он протухает
      */
     private static convertTokenResponse(tokenInfo: TokenInfoResponse): TokenInfo {
-        const tokenExpiresAt = Date.parse(tokenInfo.loginResponseTime) + tokenInfo.expiresIn * 1000;
-        const refreshTokenExpiresAt = Date.parse(tokenInfo.loginResponseTime) + tokenInfo.refreshExpiresIn * 1000;
+        const tokenExpiresAt = Date.now()+ tokenInfo.expiresIn * 1000;
+        const refreshTokenExpiresAt = Date.now() + tokenInfo.refreshExpiresIn * 1000;
         return {
             token: tokenInfo.token,
             refreshToken: tokenInfo.refreshToken,

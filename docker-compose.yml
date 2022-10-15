@@ -66,7 +66,7 @@ services:
       PRODUCTS_DB_URL: jdbc:postgresql://product-service-db:5432/product_catalog
       PRODUCTS_DB_USERNAME: product
       PRODUCTS_DB_PASSWORD: password
-      PRODUCTS_KEYCLOAK_CERT: http://localhost:8080/auth/realms/shop/protocol/openid-connect/certs
+      PRODUCTS_KEYCLOAK_CERT: http://keycloak:8080/auth/realms/shop/protocol/openid-connect/certs
       EUREKA_SERVICE_SERVER_PORT: 8084
       EUREKA_SERVICE_SERVER_HOSTNAME: eureka-service
     ports:
