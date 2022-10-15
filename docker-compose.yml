@@ -103,8 +103,6 @@ services:
       EUREKA_SERVICE_SERVER_PORT: 8084
       EUREKA_SERVICE_SERVER_HOSTNAME: eureka-service
       GATEWAY_CORS: http://localhost:8085
-      # Dev
-      #GATEWAY_CORS: http://localhost:9000
     ports:
       - "8086:8086"
 
