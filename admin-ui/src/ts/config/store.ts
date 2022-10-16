@@ -1,10 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import {LoginRequest, TokenInfo, AuthService} from "@/ts/services/AuthService";
+import {AuthService, LoginRequest, TokenInfo} from "@/ts/services/AuthService";
 import {Container} from "typescript-ioc";
 import router from "@/ts/config/router";
 import {CategoryTreeItem} from "@/ts/services/CategoryService";
+import {Role} from "@/ts/enums/role";
 
 Vue.use(Vuex);
 
@@ -13,12 +14,22 @@ export default new Vuex.Store({
         tokenInfo: null,
         categories: []
     } as State,
-    getters: {},
+    getters: {
+        hasEditRights(state) {
+            return state.tokenInfo?.roles.some(role => [Role.ADMIN, Role.EDITOR].includes(Role[role]));
+        },
+        hasAdminRights(state) {
+            return state.tokenInfo?.roles.some(role => Role.ADMIN === role);
+        }
+    },
     mutations: {},
     actions: {
         async AUTH_LOGIN({state}, authInfo: LoginRequest) {
             const userService = Container.get(AuthService);
             const tokenInfo = await userService.login(authInfo);
+            if (!tokenInfo.roles.some(role => Role[role])) {
+                throw new Error("Доступ запрещён. Недостаточно прав.");
+            }
             Vue.$cookies.set("token-info", tokenInfo);
             axios.defaults.headers.common.Authorization = `Bearer ${tokenInfo.token}`;
             state.tokenInfo = tokenInfo;
@@ -29,6 +40,9 @@ export default new Vuex.Store({
                 throw new Error("Что то пошло не так. Авторизуйтесь повторно.");
             }
             const tokenInfo = await userService.refreshToken(state.tokenInfo.refreshToken);
+            if (!tokenInfo.roles.some(role => Role[role])) {
+                throw new Error("Доступ запрещён. Недостаточно прав.");
+            }
             Vue.$cookies.set("token-info", tokenInfo);
             axios.defaults.headers.common.Authorization = `Bearer ${tokenInfo.token}`;
             state.tokenInfo = tokenInfo;

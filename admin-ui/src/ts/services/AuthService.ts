@@ -1,5 +1,7 @@
 import {OnlyInstantiableByContainer, Singleton} from "typescript-ioc";
 import axios from "axios";
+import jwtDecode, { JwtPayload } from "jwt-decode";
+import {Role} from "@/ts/enums/role";
 
 /**
  * Сервис по работе с авторизацией
@@ -43,11 +45,13 @@ export class AuthService {
     private static convertTokenResponse(tokenInfo: TokenInfoResponse): TokenInfo {
         const tokenExpiresAt = Date.now()+ tokenInfo.expiresIn * 1000;
         const refreshTokenExpiresAt = Date.now() + tokenInfo.refreshExpiresIn * 1000;
+        const info = jwtDecode<JwtInfo>(tokenInfo.token);
         return {
             token: tokenInfo.token,
             refreshToken: tokenInfo.refreshToken,
             tokenExpiresAt: tokenExpiresAt,
             refreshTokenExpiresAt: refreshTokenExpiresAt,
+            roles: info.resource_access[ENVS.KC_CLIENT].roles
         };
     }
 }
@@ -86,4 +90,11 @@ export type TokenInfo = {
     tokenExpiresAt: number;
     /** Время окончания refresh токена */
     refreshTokenExpiresAt: number;
+    /** Роли */
+    roles: (keyof typeof Role)[];
 }
+
+export type JwtInfo = {
+    resource_access: Record<string, {roles: (keyof typeof Role)[]}>,
+    name: string
+} & JwtPayload;

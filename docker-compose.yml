@@ -115,5 +115,6 @@ services:
     privileged: true
     environment:
       GATEWAY_URL: http://localhost:8086
+      KC_CLIENT: shop-app
     ports:
       - "8085:80"

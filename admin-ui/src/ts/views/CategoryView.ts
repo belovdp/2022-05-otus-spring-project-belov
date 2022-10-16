@@ -12,20 +12,30 @@ import ProductList from "@/ts/components/ProductList";
       <toolbar :title="category.title">
         <el-button-group v-if="activeTab === 'editor'" slot="buttons">
           <el-button v-if="!category.deleted"
+                     :disabled="!$store.getters.hasEditRights"
                      type="primary"
                      size="mini"
                      icon="el-icon-check"
                      round
-                     @click="onSave">Сохранить
+                     @click="onSave">
+            Сохранить
           </el-button>
           <el-button v-if="!isNewCategory && category.deleted"
+                     :disabled="!$store.getters.hasEditRights"
                      type="warning"
                      size="mini"
                      icon="el-icon-upload2"
                      round
-                     @click="onRestore">Востановить
+                     @click="onRestore">
+            Востановить
           </el-button>
-          <el-button v-if="!isNewCategory && !category.deleted" type="danger" size="mini" icon="el-icon-delete-solid" round @click="onDelete"></el-button>
+          <el-button v-if="!isNewCategory && !category.deleted"
+                     :disabled="!$store.getters.hasEditRights"
+                     type="danger"
+                     size="mini"
+                     icon="el-icon-delete-solid"
+                     round
+                     @click="onDelete"></el-button>
         </el-button-group>
       </toolbar>
       <el-tabs v-model="activeTab">

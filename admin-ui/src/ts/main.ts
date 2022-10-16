@@ -12,8 +12,8 @@ import VueAxios from "vue-axios";
 import VueCookies from "vue-cookies";
 import AxiosInterceptor from "@/ts/config/axiosInterceptor";
 
-// TODO использовать роли токена
-
+// TODO заказы
+// TODO пользователи
 Vue.config.productionTip = false;
 
 axios.defaults.baseURL = ENVS.GATEWAY_URL;

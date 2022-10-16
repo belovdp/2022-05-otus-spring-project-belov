@@ -10,7 +10,11 @@ import {TreeUtils} from "@/ts/utils/TreeUtils";
 
 @Component({
     template: `
-          <el-form v-if="category" label-position="top" label-width="100px" :model="category">
+          <el-form v-if="category"
+                   label-position="top"
+                   label-width="100px"
+                   :model="category"
+                   :disabled="!$store.getters.hasEditRights">
             <el-form-item label="Заголовок">
               <el-input v-model="category.title"></el-input>
             </el-form-item>
@@ -125,5 +129,9 @@ export default class CategoryForm extends Vue {
             }
         }
         return categories;
+    }
+
+    private get hasEditRights() {
+        return store.getters.hasEditRights;
     }
 }

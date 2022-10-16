@@ -11,13 +11,13 @@ import {ProductItem, ProductService} from "@/ts/services/ProductService";
       <div class="categoryView">
       <toolbar title="Корзина продуктов">
         <el-button-group slot="buttons">
-          <el-button :disabled="!selected.length"
+          <el-button :disabled="!selected.length || !$store.getters.hasEditRights"
                      type="warning"
                      size="mini"
                      icon="el-icon-upload2"
                      round
                      @click="onRestore">Востановить</el-button>
-          <el-button :disabled="!selected.length"
+          <el-button :disabled="!selected.length || !$store.getters.hasEditRights"
                      type="danger"
                      size="mini"
                      icon="el-icon-delete-solid"
@@ -32,7 +32,7 @@ import {ProductItem, ProductService} from "@/ts/services/ProductService";
                       :default-sort="{prop: 'id', order: 'descending'}"
                       @selection-change="onSelect"
                       empty-text="Данные отсутствуют или не загружены">
-        <el-table-column
+        <el-table-column v-if="$store.getters.hasEditRights"
             type="selection"
             width="55">
         </el-table-column>

@@ -7,7 +7,13 @@ import store from "@/ts/config/store";
     template: `
       <el-col :span="4">
       <el-menu default-active="2" class="mainMenu" router>
-        <el-button icon="el-icon-plus" class="addCat" type="primary" circle size="mini" @click="onAddCategory"></el-button>
+        <el-button icon="el-icon-plus"
+                   class="addCat"
+                   type="primary"
+                   circle
+                   size="mini"
+                   :disabled="!$store.getters.hasEditRights"
+                   @click="onAddCategory"></el-button>
         <el-submenu index="/category">
           <template slot="title">
             <i class="el-icon-s-grid"></i>

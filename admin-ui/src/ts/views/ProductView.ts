@@ -15,6 +15,7 @@ import {TreeUtils} from "@/ts/utils/TreeUtils";
       <toolbar :title="product.title">
         <el-button-group slot="buttons">
           <el-button v-if="!product.deleted"
+                     :disabled="!$store.getters.hasEditRights"
                      type="primary"
                      size="mini"
                      icon="el-icon-check"
@@ -22,6 +23,7 @@ import {TreeUtils} from "@/ts/utils/TreeUtils";
                      @click="onSave">Сохранить
           </el-button>
           <el-button v-if="!isNewProduct && product.deleted"
+                     :disabled="!$store.getters.hasEditRights"
                      type="warning"
                      size="mini"
                      icon="el-icon-upload2"
@@ -29,6 +31,7 @@ import {TreeUtils} from "@/ts/utils/TreeUtils";
                      @click="onRestore">Востановить
           </el-button>
           <el-button v-if="!isNewProduct && !product.deleted"
+                     :disabled="!$store.getters.hasEditRights"
                      type="danger"
                      size="mini"
                      icon="el-icon-delete-solid"
@@ -36,7 +39,11 @@ import {TreeUtils} from "@/ts/utils/TreeUtils";
                      @click="onDelete"></el-button>
         </el-button-group>
       </toolbar>
-      <el-form v-if="product" label-position="top" label-width="100px" :model="product">
+      <el-form v-if="product"
+               label-position="top"
+               label-width="100px"
+               :model="product"
+               :disabled="!$store.getters.hasEditRights">
         <el-form-item label="Заголовок">
           <el-input v-model="product.title"></el-input>
         </el-form-item>
