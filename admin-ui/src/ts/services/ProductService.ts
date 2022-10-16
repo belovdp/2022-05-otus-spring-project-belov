@@ -97,6 +97,8 @@ export type ProductItem = {
     published: boolean;
     /** Индекс сортировки */
     sortIndex: number;
+    /** Цена */
+    price: number;
 }
 
 /** Продукт для редактирования */

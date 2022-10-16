@@ -53,6 +53,9 @@ import {TreeUtils} from "@/ts/utils/TreeUtils";
               v-model="product.description">
           </el-input>
         </el-form-item>
+        <el-form-item label="Цена">
+          <el-input-number v-model="product.price" :min="0" step="100"></el-input-number>
+        </el-form-item>
         <el-form-item>
           <el-checkbox label="Опубликован" v-model="product.published" name="type"></el-checkbox>
         </el-form-item>
@@ -90,7 +93,7 @@ export default class ProductView extends Vue {
 
     /** Сервис по работе с продуктами */
     @Inject private readonly productService: ProductService;
-    /** Категория */
+    /** Продукт */
     private product: ProductItemFull = {
         id: null,
         title: "",
@@ -98,6 +101,7 @@ export default class ProductView extends Vue {
         published: false,
         sortIndex: 0,
         description: "",
+        price: 0,
         categories: []
     };
     /** Настройка дерева категорий */

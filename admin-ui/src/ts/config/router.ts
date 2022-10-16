@@ -7,6 +7,7 @@ import CategoryView from "@/ts/views/CategoryView";
 import CategoryTrashView from "@/ts/views/CategoryTrashView";
 import ProductTrashView from "@/ts/views/ProductTrashView";
 import ProductView from "@/ts/views/ProductView";
+import OrderListView from "@/ts/views/OrderListView";
 
 Vue.use(VueRouter);
 
@@ -42,6 +43,11 @@ const routes: Array<RouteConfig> = [
         path: "/product/:id*",
         name: "ProductView",
         component: ProductView
+    },
+    {
+        path: "/orders",
+        name: "OrderListView",
+        component: OrderListView
     },
 ];
 

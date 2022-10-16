@@ -28,7 +28,7 @@ import store from "@/ts/config/store";
             </span>
           </el-tree>
         </el-submenu>
-        <el-menu-item index="2">
+        <el-menu-item index="/orders">
           <i class="el-icon-s-goods"></i>
           <span slot="title">Заказы</span>
         </el-menu-item>

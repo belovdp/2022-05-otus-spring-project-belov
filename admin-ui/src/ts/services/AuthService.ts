@@ -17,8 +17,7 @@ export class AuthService {
                 delete headers.common["Authorization"];
             }
             return data;
-        }
-        ].concat(axios.defaults.transformRequest || [])
+        }].concat(axios.defaults.transformRequest || [])
     });
 
     /**

@@ -34,7 +34,8 @@ public class AdminOrdersController {
 
     /**
      * Возвращает заказы пользователя
-     * @return заказ
+     * @param pageable пагинация
+     * @return заказы
      */
     @GetMapping("/")
     public Page<OrderShortDto> getOrders(Pageable pageable) {
