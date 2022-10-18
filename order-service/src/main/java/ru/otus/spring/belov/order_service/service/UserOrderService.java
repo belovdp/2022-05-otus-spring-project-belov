@@ -38,7 +38,7 @@ public class UserOrderService implements OrderService {
     @Override
     public Page<OrderShortDto> getOrders(Pageable pageable) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return orderRepository.findAllByUserId(userId, pageable).map(orderMapper::orderToShortDto);
+        return orderRepository.findAllByUserId(userId, pageable);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class AdminOrderService implements OrderService {
 
     @Override
     public Page<OrderShortDto> getOrders(Pageable pageable) {
-        return orderRepository.findAll(pageable).map(orderMapper::orderToShortDto);
+        return orderRepository.findAllWithTotalSum(pageable);
     }
 
     @Override

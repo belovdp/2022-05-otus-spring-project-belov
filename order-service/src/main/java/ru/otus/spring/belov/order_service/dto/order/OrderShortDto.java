@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -30,4 +31,6 @@ public class OrderShortDto {
     private String userId;
     /** Имя контактного лица */
     private String username;
+    /** Цена заказа */
+    private BigDecimal totalPrice;
 }

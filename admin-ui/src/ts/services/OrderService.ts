@@ -16,7 +16,7 @@ export class OrderService {
      */
     async getOrders(pageable: SpringPageable): Promise<TableData<OrderShort>> {
         return (await axios.get<TableData<OrderShort>>("/order-service/admin/orders/", {
-            params: {pageable}
+            params: pageable
         })).data;
     }
 
@@ -57,6 +57,8 @@ export type OrderShort = {
     userId: string;
     /** Имя контактного лица */
     username: string;
+    /** Цена заказа */
+    totalPrice: number;
 }
 
 /** Заказ */

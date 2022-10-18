@@ -5,6 +5,19 @@ html, body, #app {
   margin: 0;
   padding: 0;
 }
+a {
+  color: teal;
+}
+a:hover {
+  color: #339999;
+}
+.el-button--text {
+  text-decoration: underline;
+}
+.el-button--text:hover {
+  text-decoration: none;
+}
+
 .loginDialog {
   height: 100%;
   align-items: center;

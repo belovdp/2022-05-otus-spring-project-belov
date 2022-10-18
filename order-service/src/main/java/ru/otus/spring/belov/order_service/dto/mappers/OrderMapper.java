@@ -41,13 +41,6 @@ public abstract class OrderMapper {
     public abstract OrderDto orderToDto(Order order);
 
     /**
-     * Конвертирует заказ в dto без продуктов
-     * @param order заказ
-     * @return заказ dto без продуктов
-     */
-    public abstract OrderShortDto orderToShortDto(Order order);
-
-    /**
      * Конвертирует товар заказа в dto
      * @param order заказ
      * @return товар заказа dto

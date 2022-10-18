@@ -3,7 +3,9 @@ package ru.otus.spring.belov.order_service.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.otus.spring.belov.order_service.domain.Order;
+import ru.otus.spring.belov.order_service.dto.order.OrderShortDto;
 
 import java.util.Optional;
 
@@ -18,7 +20,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * @param pageable пагинация
      * @return все заказы пользователя
      */
-    Page<Order> findAllByUserId(String userId, Pageable pageable);
+    @Query("SELECT new ru.otus.spring.belov.order_service.dto.order.OrderShortDto(o.id, o.created, o.email, o.phone, " +
+            "o.note, o.address, o.userId, o.username, SUM(oi.price * oi.count)) " +
+            "FROM Order AS o join o.items AS oi where o.userId = :userId GROUP BY o.id")
+    Page<OrderShortDto> findAllByUserId(String userId, Pageable pageable);
 
     /**
      * Возвращает заказ пользователя
@@ -27,4 +32,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * @return заказ пользователя
      */
     Optional<Order> findByUserIdAndId(String userId, long orderId);
+
+    /**
+     * Возвращает все заказы
+     * @param pageable пагинация
+     * @return все заказы
+     */
+    @Query("SELECT new ru.otus.spring.belov.order_service.dto.order.OrderShortDto(o.id, o.created, o.email, o.phone, " +
+            "o.note, o.address, o.userId, o.username, SUM(oi.price * oi.count)) " +
+            "FROM Order AS o join o.items AS oi GROUP BY o.id")
+    Page<OrderShortDto> findAllWithTotalSum(Pageable pageable);
 }

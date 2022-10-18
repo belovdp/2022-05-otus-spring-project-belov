@@ -1,8 +1,6 @@
 package ru.otus.spring.belov.order_service.domain;
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

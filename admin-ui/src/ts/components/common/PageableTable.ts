@@ -1,6 +1,7 @@
 import {Component, Prop, Vue} from "vue-property-decorator";
 import {DefaultSortOptions, SortOrder as ElSortOrder, ElTable} from "element-ui/types/table";
 import {ElTableColumn} from "element-ui/types/table-column";
+import {Notification} from "element-ui";
 
 /**
  * Компонент таблиц с пагинацией и сортировкой
@@ -80,6 +81,7 @@ export default class PageableTable<T> extends Vue {
             });
         } catch (e) {
             this.data = this.getNullableData();
+            Notification.error(`Ошибка загрузки данных таблицы: ${e}`);
         }
     }
 
