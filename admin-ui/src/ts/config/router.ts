@@ -1,6 +1,5 @@
 import VueRouter, {RawLocation, Route, RouteConfig} from "vue-router";
 import Vue from "vue";
-import HomeView from "@/ts/views/HomeView";
 import LoginView from "@/ts/views/LoginView";
 import store from "@/ts/config/store";
 import CategoryView from "@/ts/views/CategoryView";
@@ -8,13 +7,14 @@ import CategoryTrashView from "@/ts/views/CategoryTrashView";
 import ProductTrashView from "@/ts/views/ProductTrashView";
 import ProductView from "@/ts/views/ProductView";
 import OrderListView from "@/ts/views/OrderListView";
+import UserListView from "@/ts/views/UserListView";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
     {
         path: "/",
-        component: HomeView
+        component: OrderListView
     },
     {
         path: "/login",
@@ -48,6 +48,11 @@ const routes: Array<RouteConfig> = [
         path: "/orders",
         name: "OrderListView",
         component: OrderListView
+    },
+    {
+        path: "/users",
+        name: "UserListView",
+        component: UserListView
     },
 ];
 

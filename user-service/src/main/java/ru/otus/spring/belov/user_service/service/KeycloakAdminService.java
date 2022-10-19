@@ -1,8 +1,9 @@
 package ru.otus.spring.belov.user_service.service;
 
+import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springdoc.core.converters.models.Pageable;
-import ru.otus.spring.belov.user_service.entity.GroupEnum;
+import ru.otus.spring.belov.user_service.entity.dto.Page;
 import ru.otus.spring.belov.user_service.entity.dto.RegisterUserRequest;
 import ru.otus.spring.belov.user_service.entity.dto.TokenInfoResponse;
 
@@ -32,12 +33,25 @@ public interface KeycloakAdminService {
      * @param pageable пагинация
      * @return список пользователей
      */
-    List<UserRepresentation> getUsers(Pageable pageable);
+    Page<UserRepresentation> getUsers(Pageable pageable);
 
     /**
      * Устанавливает группу пользователя
-     * @param userId идентификатор пользователя
-     * @param group группа пользователей
+     * @param userId  идентификатор пользователя
+     * @param groupId группа пользователей
      */
-    void setUserGroup(String userId, GroupEnum group);
+    void setUserGroup(String userId, String groupId);
+
+    /**
+     * Возвращает список групп
+     * @return список групп
+     */
+    List<GroupRepresentation> getGroups();
+
+    /**
+     * Изменяет статус пользователя
+     * @param userId   идентификатор пользователя
+     * @param activate статус пользователя
+     */
+    void onChangeEnableStatus(String userId, boolean activate);
 }

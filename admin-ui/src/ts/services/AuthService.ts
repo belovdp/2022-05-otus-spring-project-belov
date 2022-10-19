@@ -50,7 +50,7 @@ export class AuthService {
             refreshToken: tokenInfo.refreshToken,
             tokenExpiresAt: tokenExpiresAt,
             refreshTokenExpiresAt: refreshTokenExpiresAt,
-            roles: info.resource_access[ENVS.KC_CLIENT].roles
+            roles: info?.resource_access?.[ENVS.KC_CLIENT]?.roles || []
         };
     }
 }

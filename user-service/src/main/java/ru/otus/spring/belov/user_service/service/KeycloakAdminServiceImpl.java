@@ -7,11 +7,13 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springdoc.core.converters.models.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.belov.user_service.entity.GroupEnum;
 import ru.otus.spring.belov.user_service.entity.dto.KeycloakError;
+import ru.otus.spring.belov.user_service.entity.dto.Page;
 import ru.otus.spring.belov.user_service.entity.dto.RegisterUserRequest;
 import ru.otus.spring.belov.user_service.entity.dto.TokenInfoResponse;
 import ru.otus.spring.belov.user_service.exceptions.ApplicationException;
@@ -66,24 +68,61 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService {
     }
 
     @Override
-    public List<UserRepresentation> getUsers(Pageable pageable) {
-        return keycloak.realm(kcProperties.getRealm())
+    public Page<UserRepresentation> getUsers(Pageable pageable) {
+        var totalCount = keycloak.realm(kcProperties.getRealm())
+                .users()
+                .count();
+        var totalPages = (totalCount + pageable.getSize() - 1) / pageable.getSize();
+        var users = keycloak.realm(kcProperties.getRealm())
                 .users()
                 .list(pageable.getPage() * pageable.getSize(), pageable.getSize());
+        users.forEach(user -> {
+            user.setGroups(keycloak.realm(kcProperties.getRealm())
+                    .users()
+                    .get(user.getId())
+                    .groups()
+                    .stream()
+                    .map(GroupRepresentation::getName)
+                    .toList());
+        });
+        return new Page<>(totalPages, totalCount, users);
     }
 
     @Override
-    public void setUserGroup(String userId, GroupEnum group) {
+    public void setUserGroup(String userId, String groupId) {
+        if (userId.equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+            throw new ApplicationException("Изменять группу себе запрещенно");
+        }
         try {
             var groups = keycloak.realm(kcProperties.getRealm()).users().get(userId).groups();
+            keycloak.realm(kcProperties.getRealm()).users().get(userId).joinGroup(groupId);
             groups.forEach(groupRepresentation -> keycloak.realm(kcProperties.getRealm())
                     .users()
                     .get(userId)
                     .leaveGroup(groupRepresentation.getId())
             );
-            keycloak.realm(kcProperties.getRealm()).users().get(userId).joinGroup(group.getGroupId());
         } catch (Exception ex) {
             throw new ApplicationException("Не удалось изменить группу пользователя. Попробуйте ещё раз или обратитесь к администратору", ex);
         }
+    }
+
+    @Override
+    public List<GroupRepresentation> getGroups() {
+        return keycloak.realm(kcProperties.getRealm())
+                .groups()
+                .groups();
+    }
+
+    @Override
+    public void onChangeEnableStatus(String userId, boolean activate) {
+        var user = keycloak.realm(kcProperties.getRealm())
+                .users()
+                .get(userId)
+                .toRepresentation();
+        user.setEnabled(activate);
+        keycloak.realm(kcProperties.getRealm())
+                .users()
+                .get(userId)
+                .update(user);
     }
 }
