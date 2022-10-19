@@ -2,9 +2,12 @@ import {Component, Prop, Vue, Watch} from "vue-property-decorator";
 import {Inject} from "typescript-ioc";
 import {Order, OrderService} from "@/ts/services/OrderService";
 import {rubFormatter} from "@/ts/utils/formatters";
+import UserDialog from "@/ts/components/UserDialog";
 
+// TODO инфа по пользователю
 @Component({
     template: `
+      <div>
       <el-dialog v-if="orderId && order" :title="'Заказ #' + orderId" :visible="true" @close="$emit('close')">
       <el-descriptions class="margin-top" :column="2" border>
         <el-descriptions-item>
@@ -12,7 +15,7 @@ import {rubFormatter} from "@/ts/utils/formatters";
             <i class="el-icon-user"></i>
             Получатель
           </template>
-          <el-button type="text" size="small" @click="$router.push('/users/' + order.userId)">{{order.username}}</el-button>
+          <el-button type="text" size="small" @click="$refs.userDialog.show(order.userId)">{{order.username}}</el-button>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
@@ -51,9 +54,18 @@ import {rubFormatter} from "@/ts/utils/formatters";
         <el-table-column prop="count" align="right" label="Количество" sortable></el-table-column>
       </el-table>
       </el-dialog>
+      <user-dialog ref="userDialog"/>
+      </div>
     `,
+    components: {
+        UserDialog
+    }
 })
 export default class OrderDialog extends Vue {
+
+    $refs: {
+        userDialog: UserDialog
+    };
 
     /** Сервис по работе с заказами */
     @Inject private readonly orderService: OrderService;

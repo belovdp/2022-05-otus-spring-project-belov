@@ -21,6 +21,10 @@ export class UserService {
         })).data;
     }
 
+    async getUser(userId: string): Promise<User> {
+        return (await axios.get<User>(`/user-service/admin/users/${userId}`)).data;
+    }
+
     /**
      * Возвращает список групп пользователей
      */
@@ -61,6 +65,10 @@ export type User = {
     enabled: boolean;
     /** Почта */
     email: string;
+    /** Имя */
+    firstName: string;
+    /** Фамилия */
+    lastName: string;
     /** Группы */
     groups: string[];
 }
