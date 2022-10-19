@@ -4,7 +4,6 @@ import {Order, OrderService} from "@/ts/services/OrderService";
 import {rubFormatter} from "@/ts/utils/formatters";
 import UserDialog from "@/ts/components/UserDialog";
 
-// TODO инфа по пользователю
 @Component({
     template: `
       <div>

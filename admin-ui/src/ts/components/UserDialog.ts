@@ -2,7 +2,6 @@ import {Component, Vue} from "vue-property-decorator";
 import {Inject} from "typescript-ioc";
 import {User, UserService} from "@/ts/services/UserService";
 
-// TODO инфа по пользователю
 @Component({
     template: `
       <el-dialog :title="title" :visible.sync="visible">
