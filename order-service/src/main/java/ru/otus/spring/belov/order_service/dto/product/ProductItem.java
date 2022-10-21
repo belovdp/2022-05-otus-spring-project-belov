@@ -1,6 +1,7 @@
 package ru.otus.spring.belov.order_service.dto.product;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 /**
  * Продукт
  */
+@Builder
 @AllArgsConstructor
 @Setter
 @Getter

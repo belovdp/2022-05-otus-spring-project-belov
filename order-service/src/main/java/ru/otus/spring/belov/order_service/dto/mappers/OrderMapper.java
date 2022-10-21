@@ -62,7 +62,7 @@ public abstract class OrderMapper {
      * @return объект заказа
      */
     @Mapping(target = "items", source = "request.productIds", qualifiedByName = "itemsFromProductIds")
-    @Mapping(target = "created", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "created", expression = "java(java.time.LocalDateTime.now())")
     public abstract Order createRequestToOrder(CreateOrderRequest request, String userId);
 
     /**

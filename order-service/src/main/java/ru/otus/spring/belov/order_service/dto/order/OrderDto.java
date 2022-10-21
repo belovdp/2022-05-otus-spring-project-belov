@@ -2,6 +2,7 @@ package ru.otus.spring.belov.order_service.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.otus.spring.belov.order_service.dto.user.UserInfoDto;
 
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Заказ
  */
+@NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
