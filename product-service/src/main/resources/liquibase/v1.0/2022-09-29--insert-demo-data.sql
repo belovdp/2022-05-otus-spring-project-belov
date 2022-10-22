@@ -6,13 +6,13 @@ VALUES (1, false, false, true, 0, 'Категория 1', null);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
 VALUES (2, false, false, true, 0, 'Категория 2', null);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
-VALUES (3, false, false, true, 0, 'Категория 3', null);
+VALUES (3, true, false, true, 0, 'Категория 3', null);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
 VALUES (4, false, false, true, 0, 'Категория 4', null);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
 VALUES (5, false, false, false, 0, 'Категория 1.1', 1);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
-VALUES (6, false, false, true, 0, 'Категория 1.2', 1);
+VALUES (6, false, true, true, 0, 'Категория 1.2', 1);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
 VALUES (7, false, false, true, 0, 'Категория 1.3', 1);
 INSERT INTO categories (id, deleted, hide, published, sort_index, title, parent_id)
@@ -67,7 +67,7 @@ VALUES (3, false, true, 0, 'Продукт 3', 3000);
 INSERT INTO products (id, deleted, published, sort_index, title, price)
 VALUES (4, false, true, 0, 'Продукт 4', 3500);
 INSERT INTO products (id, deleted, published, sort_index, title, price)
-VALUES (5, false, true, 0, 'Продукт 5', 45000);
+VALUES (5, false, false, 0, 'Продукт 5', 45000);
 INSERT INTO products (id, deleted, published, sort_index, title, price)
 VALUES (6, false, true, 0, 'Продукт 6', 10000);
 INSERT INTO products (id, deleted, published, sort_index, title, price)
@@ -95,7 +95,7 @@ VALUES (17, false, true, 0, 'Продукт 17', 2050);
 INSERT INTO products (id, deleted, published, sort_index, title, price)
 VALUES (18, false, true, 0, 'Продукт 18', 2048);
 INSERT INTO products (id, deleted, published, sort_index, title, price)
-VALUES (19, false, true, 0, 'Продукт 19', 1024);
+VALUES (19, true, true, 0, 'Продукт 19', 1024);
 INSERT INTO products (id, deleted, published, sort_index, title, price)
 VALUES (20, false, true, 0, 'Продукт 20', 128);
 INSERT INTO products (id, deleted, published, sort_index, title, price)

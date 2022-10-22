@@ -1,12 +1,12 @@
 package ru.otus.spring.belov.product_service.dto.category;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * Фильтр на получение категорий
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 @Setter

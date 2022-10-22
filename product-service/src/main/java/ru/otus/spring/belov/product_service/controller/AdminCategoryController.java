@@ -41,7 +41,7 @@ public class AdminCategoryController {
      * @return категория
      */
     @GetMapping("/{id}")
-    public CategoryItem getProduct(@PathVariable Long id) {
+    public CategoryItem getCategory(@PathVariable Long id) {
         return categoryService.getCategoryById(id);
     }
 

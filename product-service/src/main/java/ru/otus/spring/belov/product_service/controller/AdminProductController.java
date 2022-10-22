@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
+import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
-import ru.otus.spring.belov.product_service.service.ProductServiceImpl;
+import ru.otus.spring.belov.product_service.service.ProductService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 public class AdminProductController {
 
     /** Сервис по работе с категориями */
-    private final ProductServiceImpl productService;
+    private final ProductService productService;
 
     /**
      * Возвращает продукты не удалённые и опубликованные из категории

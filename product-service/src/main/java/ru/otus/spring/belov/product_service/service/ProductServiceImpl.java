@@ -83,11 +83,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(List<Long> ids) {
-        var cats = productRepository.findAllById(ids);
-        if (cats.stream().anyMatch(cat -> !cat.isDeleted())) {
+        var products = productRepository.findAllById(ids);
+        if (products.stream().anyMatch(product -> !product.isDeleted())) {
             throw new ApplicationException("Удалить можно только продукты, находящиеся в корзине");
         }
-        productRepository.deleteAll(cats);
+        productRepository.deleteAll(products);
     }
 
     @Override

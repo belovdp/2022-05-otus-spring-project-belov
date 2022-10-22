@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
+import ru.otus.spring.belov.product_service.service.ProductService;
 import ru.otus.spring.belov.product_service.service.ProductServiceImpl;
 
 import java.util.List;
@@ -19,8 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
 
-    /** Сервис по работе с категориями */
-    private final ProductServiceImpl productService;
+    /** Сервис по работе с продуктами */
+    private final ProductService productService;
 
     /**
      * Возвращает продукты не удалённые и опубликованные из категории
@@ -45,7 +46,7 @@ public class ProductController {
     }
 
     @GetMapping("/list")
-    public List<ProductItem> getProducts(@RequestParam(name = "ids") List<Long> ids) {
+    public List<ProductItem> getProductsByIds(@RequestParam(name = "ids") List<Long> ids) {
         return productService.getActiveProductsByIds(ids);
     }
 }
