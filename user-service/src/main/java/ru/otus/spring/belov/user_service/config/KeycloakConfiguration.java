@@ -36,21 +36,12 @@ public class KeycloakConfiguration {
      */
     @Bean
     public AuthzClient userPasswordAuthClient() {
-        return AuthzClient.create(keycloakAuthConfiguration());
-    }
-
-    /**
-     * Возвращает конфигурацию для keycloak-authz
-     * @return конфигурацию для keycloak-authz
-     */
-    @Bean
-    @Primary
-    public org.keycloak.authorization.client.Configuration keycloakAuthConfiguration() {
         var credentials = new HashMap<>(kcProperties.getCredentials());
         credentials.put("grant_type", "password");
-        return new org.keycloak.authorization.client.Configuration(
+        var conf = new org.keycloak.authorization.client.Configuration(
                 kcProperties.getAuthServerUrl(), kcProperties.getRealm(),
                 kcProperties.getResource(), credentials, null);
+        return AuthzClient.create(conf);
     }
 
     /**

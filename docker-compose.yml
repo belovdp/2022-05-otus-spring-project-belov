@@ -3,6 +3,7 @@ version: "3"
 services:
   keycloak-db:
     image: postgres:13.2
+    container_name: local-keycloak-db
     restart: unless-stopped
     environment:
       POSTGRES_DB: keycloak
@@ -12,7 +13,8 @@ services:
   keycloak:
     depends_on:
       - keycloak-db
-    container_name: local_keycloak
+    image: jboss/keycloak:16.1.1
+    container_name: local-keycloak
     environment:
       DB_VENDOR: postgres
       DB_ADDR: keycloak-db
@@ -24,7 +26,6 @@ services:
       KEYCLOAK_IMPORT: "/tmp/export.json -Dkeycloak.profile.feature.upload_scripts=enabled"
     volumes:
       - "./keycloak/export.json:/tmp/export.json"
-    image: jboss/keycloak:16.1.1
     restart: unless-stopped
     ports:
       - "127.0.0.1:8080:8080"

@@ -64,7 +64,15 @@ public class KeycloakAdminServiceImpl implements KeycloakAdminService {
 
     @Override
     public UserRepresentation getUser(String id) {
-        return keycloak.realm(kcProperties.getRealm()).users().get(id).toRepresentation();
+        var user = keycloak.realm(kcProperties.getRealm()).users().get(id).toRepresentation();
+        user.setGroups(keycloak.realm(kcProperties.getRealm())
+                .users()
+                .get(user.getId())
+                .groups()
+                .stream()
+                .map(GroupRepresentation::getName)
+                .toList());
+        return user;
     }
 
     @Override

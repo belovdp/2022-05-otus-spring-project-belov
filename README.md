@@ -5,8 +5,8 @@
 
 ### [Админка](http://localhost:8085/#/)
 #### Пользователи и пароли
-Администратор: admin admin
-Редактор: editor editor
+Администратор: admin admin\
+Редактор: editor editor\
 Менеджер без права редактирования: viewer viewer
 
 ---

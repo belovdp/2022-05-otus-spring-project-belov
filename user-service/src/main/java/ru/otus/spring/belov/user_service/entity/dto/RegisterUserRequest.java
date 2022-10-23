@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * Запрос на создание пользователя
@@ -19,7 +19,7 @@ public class RegisterUserRequest {
     private final String email;
     /** Пароль */
     @NotEmpty(message = "Требуется указать пароль")
-    @Min(value = 8, message = "Минимальное число символов для пкароля: 8")
+    @Size(min = 2, message = "Минимальное число символов для пароля: 8")
     private final String password;
     /** Имя пользователя */
     private final String firstname;
