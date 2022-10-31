@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 import ru.otus.spring.belov.product_service.domain.Product;
@@ -12,11 +13,16 @@ import ru.otus.spring.belov.product_service.dto.mappers.ProductMapperImpl;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
 import ru.otus.spring.belov.product_service.exceptions.ApplicationException;
+import ru.otus.spring.belov.product_service.feign.FileServiceClient;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @DisplayName("Интеграционный тест сервиса продуктов")
 @DataJpaTest
@@ -30,6 +36,8 @@ class ProductServiceImplTest {
     private ProductService productService;
     @Autowired
     private TestEntityManager em;
+    @MockBean
+    private FileServiceClient fileServiceClient;
 
     @DisplayName("Тест получения продуктов")
     @Test
@@ -111,6 +119,7 @@ class ProductServiceImplTest {
     void delete() {
         assertNotNull(em.find(Product.class, PRODUCT_ID_IN_TRASH), "Продукт не найден");
         productService.delete(List.of(PRODUCT_ID_IN_TRASH));
+        verify(fileServiceClient).deleteEntityFiles(any(), eq(PRODUCT_ID_IN_TRASH));
         assertNull(em.find(Product.class, PRODUCT_ID_IN_TRASH), "Продукт не удалился");
 
         assertThrows(ApplicationException.class, () -> productService.delete(List.of(2L)),

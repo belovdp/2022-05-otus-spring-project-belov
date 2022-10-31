@@ -17,6 +17,7 @@ import ru.otus.spring.belov.product_service.dto.product.ProductItem;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.ProductItemFull;
 import ru.otus.spring.belov.product_service.exceptions.ApplicationException;
+import ru.otus.spring.belov.product_service.feign.FileServiceClient;
 import ru.otus.spring.belov.product_service.repository.CategoryRepository;
 import ru.otus.spring.belov.product_service.repository.ProductRepository;
 
@@ -39,6 +40,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     /** Репозиторий по работе с категориями */
     private final CategoryRepository categoryRepository;
+    /** Клиент по работе с сервисом файлов */
+    private final FileServiceClient fileServiceClient;
 
     @Override
     public Page<ProductItem> getProducts(ProductFilter productFilter, Pageable pageable) {
@@ -87,6 +90,9 @@ public class ProductServiceImpl implements ProductService {
         if (products.stream().anyMatch(product -> !product.isDeleted())) {
             throw new ApplicationException("Удалить можно только продукты, находящиеся в корзине");
         }
+        products.forEach(product -> {
+            fileServiceClient.deleteEntityFiles(FileServiceClient.EntityCategory.PRODUCT, product.getId());
+        });
         productRepository.deleteAll(products);
     }
 

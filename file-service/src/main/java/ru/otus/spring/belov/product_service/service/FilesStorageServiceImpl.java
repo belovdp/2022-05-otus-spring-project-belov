@@ -53,9 +53,12 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     @Override
     public void deleteEntityFiles(EntityCategory entityCategory, Long entityId) {
         try {
-            FileUtils.forceDelete(Paths.get(dir, entityCategory.getFilesSubDirectory(), String.valueOf(entityId)).toFile());
+            var deleteFile = Paths.get(dir, entityCategory.getFilesSubDirectory(), String.valueOf(entityId)).toFile();
+            if (deleteFile.exists()) {
+                FileUtils.forceDelete(deleteFile);
+            }
         } catch (IOException e) {
-            throw new ApplicationException("Ошибка удаления файлов для {} {}", entityCategory, entityId, e);
+            throw new ApplicationException("Ошибка удаления файлов для %s %s", entityCategory, entityId, e);
         }
     }
 
