@@ -1,14 +1,17 @@
 package ru.otus.spring.belov.product_service.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otus.spring.belov.product_service.domain.EntityCategory;
 import ru.otus.spring.belov.product_service.domain.FileInfo;
+import ru.otus.spring.belov.product_service.exceptions.ApplicationException;
 import ru.otus.spring.belov.product_service.service.FilesService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -69,7 +72,12 @@ public class FilesController {
      */
     @GetMapping(value = "/{id}")
     public void getFile(@PathVariable UUID id, HttpServletResponse response) {
-        filesService.loadFileAsStream(id, response);
+        try (var is = filesService.loadFileAsStream(id)) {
+            IOUtils.copy(is, response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException ex) {
+            throw new ApplicationException("Не удалось скачать файл", ex);
+        }
     }
 
     /**
@@ -81,6 +89,11 @@ public class FilesController {
     public void getPreviewFile(@PathVariable EntityCategory entityCategory,
                                @PathVariable Long entityId,
                                HttpServletResponse response) {
-        filesService.loadPreviewAsStream(entityCategory, entityId, response);
+        try (var is = filesService.loadPreviewAsStream(entityCategory, entityId)) {
+            IOUtils.copy(is, response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException ex) {
+            throw new ApplicationException("Не удалось скачать файл", ex);
+        }
     }
 }
