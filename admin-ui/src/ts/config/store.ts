@@ -34,18 +34,22 @@ export default new Vuex.Store({
             axios.defaults.headers.common.Authorization = `Bearer ${tokenInfo.token}`;
             state.tokenInfo = tokenInfo;
         },
-        async REFRESH_TOKEN({state}) {
+        async REFRESH_TOKEN({dispatch, state}) {
             const userService = Container.get(AuthService);
             if (!state.tokenInfo) {
                 throw new Error("Что то пошло не так. Авторизуйтесь повторно.");
             }
-            const tokenInfo = await userService.refreshToken(state.tokenInfo.refreshToken);
-            if (!tokenInfo.roles.some(role => Role[role])) {
-                throw new Error("Доступ запрещён. Недостаточно прав.");
+            try {
+                const tokenInfo = await userService.refreshToken(state.tokenInfo.refreshToken);
+                if (!tokenInfo.roles.some(role => Role[role])) {
+                    throw new Error("Доступ запрещён. Недостаточно прав.");
+                }
+                Vue.$cookies.set("token-info", tokenInfo);
+                axios.defaults.headers.common.Authorization = `Bearer ${tokenInfo.token}`;
+                state.tokenInfo = tokenInfo;
+            } catch (e) {
+                dispatch("AUTH_LOGOUT");
             }
-            Vue.$cookies.set("token-info", tokenInfo);
-            axios.defaults.headers.common.Authorization = `Bearer ${tokenInfo.token}`;
-            state.tokenInfo = tokenInfo;
         },
         async AUTH_LOGOUT({state}) {
             Vue.$cookies.remove("token-info");

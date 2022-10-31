@@ -18,7 +18,7 @@ import {FileService} from "@/ts/services/FileService";
         </el-col>
       </el-row>
       <el-upload
-          style="width:300px"
+          style="width:300px; margin-top: 20px"
           action="/"
           :http-request="uploadImage"
           ref="upload"
