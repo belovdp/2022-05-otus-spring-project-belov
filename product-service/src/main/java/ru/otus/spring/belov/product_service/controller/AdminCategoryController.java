@@ -2,8 +2,10 @@ package ru.otus.spring.belov.product_service.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.product_service.dto.category.CategoryFilter;
 import ru.otus.spring.belov.product_service.dto.category.CategoryItem;
@@ -17,6 +19,7 @@ import java.util.List;
 /**
  * Контроллер для работы с категориями через админ панель
  */
+@Slf4j
 @RestController
 @RequestMapping("/admin/categories")
 @RequiredArgsConstructor
@@ -59,6 +62,7 @@ public class AdminCategoryController {
      */
     @PostMapping("/trash")
     public void moveToTrash(@RequestBody List<Long> ids) {
+        log.info("Перенос категорий {} в корзину пользователем {}", ids, SecurityContextHolder.getContext().getAuthentication().getName());
         categoryService.moveToTrash(ids);
     }
 
@@ -68,6 +72,7 @@ public class AdminCategoryController {
      */
     @PostMapping("/trash/restore")
     public void restoreTrash(@RequestBody List<Long> ids) {
+        log.info("Востановление категорий {} из корзины пользователем {}", ids, SecurityContextHolder.getContext().getAuthentication().getName());
         categoryService.restoreTrash(ids);
     }
 
@@ -76,6 +81,7 @@ public class AdminCategoryController {
      */
     @DeleteMapping("/")
     public void delete(@RequestBody List<Long> ids) {
+        log.info("Удаление категорий {} пользователем {}", ids, SecurityContextHolder.getContext().getAuthentication().getName());
         categoryService.delete(ids);
     }
 
@@ -85,6 +91,8 @@ public class AdminCategoryController {
      */
     @PostMapping("/")
     public CategoryItem save(@RequestBody @Valid SaveCategoryRequest saveCategoryRequest) {
+        log.info("Создание категории {} пользователем {}", saveCategoryRequest.getTitle(),
+                SecurityContextHolder.getContext().getAuthentication().getName());
         return categoryService.saveCategory(saveCategoryRequest);
     }
 }

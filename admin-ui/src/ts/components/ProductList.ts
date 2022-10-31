@@ -11,6 +11,12 @@ import {FileService} from "@/ts/services/FileService";
     template: `
       <div class="productList">
           <el-button-group slot="buttons">
+            <el-button :disabled="!$store.getters.hasEditRights"
+                       type="primary"
+                       size="mini"
+                       icon="el-icon-check"
+                       round
+                       @click="onAdd"></el-button>
             <el-button :disabled="!selected.length || !$store.getters.hasEditRights"
                        type="danger"
                        size="mini"
@@ -90,6 +96,10 @@ export default class ProductList extends Vue {
         this.selected = [];
         await this.$refs.table.refresh(false);
         Notification.success("Продукты перемещены в корзину");
+    }
+
+    private async onAdd(): Promise<void> {
+        await this.$router.push({name: "ProductView"});
     }
 
     private async onEdit(id: string): Promise<void> {

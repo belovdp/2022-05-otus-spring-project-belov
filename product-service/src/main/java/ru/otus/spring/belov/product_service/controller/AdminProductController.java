@@ -2,8 +2,10 @@ package ru.otus.spring.belov.product_service.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.product_service.dto.product.ProductFilter;
 import ru.otus.spring.belov.product_service.dto.product.ProductItem;
@@ -16,6 +18,7 @@ import java.util.List;
 /**
  * Контроллер для работы с продуктами
  */
+@Slf4j
 @RestController
 @RequestMapping("/admin/products")
 @RequiredArgsConstructor
@@ -57,10 +60,11 @@ public class AdminProductController {
     }
 
     /**
-     * Переносит категории в корзину
+     * Переносит продукт в корзину
      */
     @PostMapping("/trash")
     public void moveToTrash(@RequestBody List<Long> ids) {
+        log.info("Перенос продуктов {} в корзину пользователем {}", ids, SecurityContextHolder.getContext().getAuthentication().getName());
         productService.moveToTrash(ids);
     }
 
@@ -70,23 +74,27 @@ public class AdminProductController {
      */
     @PostMapping("/trash/restore")
     public void restoreTrash(@RequestBody List<Long> ids) {
+        log.info("Востановление продуктов {} из корзины пользователем {}", ids, SecurityContextHolder.getContext().getAuthentication().getName());
         productService.restoreTrash(ids);
     }
 
     /**
-     * Переносит категории в корзину
+     * Переносит продукт в корзину
      */
     @DeleteMapping("/")
     public void delete(@RequestBody List<Long> ids) {
+        log.info("Удаление продуктов {} пользователем {}", ids, SecurityContextHolder.getContext().getAuthentication().getName());
         productService.delete(ids);
     }
 
     /**
-     * Сохраняет/изменяет категорию
+     * Сохраняет/изменяет продукт
      * @param saveProductRequest запрос на сохранение/обновление категорий
      */
     @PostMapping("/")
     public ProductItemFull save(@RequestBody ProductItemFull saveProductRequest) {
+        log.info("Создание продукта {} пользователем {}", saveProductRequest.getTitle(),
+                SecurityContextHolder.getContext().getAuthentication().getName());
         return productService.saveProduct(saveProductRequest);
     }
 }

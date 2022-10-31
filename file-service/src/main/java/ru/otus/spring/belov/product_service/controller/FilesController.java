@@ -2,8 +2,10 @@ package ru.otus.spring.belov.product_service.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.otus.spring.belov.product_service.domain.EntityCategory;
@@ -16,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/files")
@@ -46,6 +49,8 @@ public class FilesController {
     public FileInfo uploadFiles(@RequestParam(value = "file") MultipartFile file,
                                 @PathVariable EntityCategory entityCategory,
                                 @PathVariable Long entityId) {
+        log.info("Сохранение файла для {} с id {} пользователем {}", entityCategory, entityId,
+                SecurityContextHolder.getContext().getAuthentication().getName());
         return filesService.save(file, entityCategory, entityId);
     }
 
@@ -56,6 +61,7 @@ public class FilesController {
     @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/{id}")
     public void deleteFile(@PathVariable UUID id) {
+        log.info("Удаление файла с id {} пользователем {}", id, SecurityContextHolder.getContext().getAuthentication().getName());
         filesService.delete(id);
     }
 
@@ -68,6 +74,7 @@ public class FilesController {
     @DeleteMapping("/{entityCategory}/{entityId}")
     public void deleteEntityFiles(@PathVariable EntityCategory entityCategory,
                                   @PathVariable Long entityId) {
+        log.info("Удаление файлов для {} с id {} пользователем {}", entityCategory, entityId, SecurityContextHolder.getContext().getAuthentication().getName());
         filesService.deleteEntityFiles(entityCategory, entityId);
     }
 

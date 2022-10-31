@@ -2,9 +2,11 @@ package ru.otus.spring.belov.user_service.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springdoc.core.converters.models.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.user_service.entity.dto.Page;
 import ru.otus.spring.belov.user_service.service.KeycloakAdminService;
@@ -14,6 +16,7 @@ import java.util.List;
 /**
  * Контроллер для административных функций
  */
+@Slf4j
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -50,6 +53,8 @@ public class AdminController {
      */
     @PostMapping(value = "/users/{userId}/group")
     public void setUserGroup(@PathVariable("userId") String userId, @RequestBody String groupId) {
+        log.info("Установка группы {} для пользователя {} пользователем {}", groupId, userId,
+                SecurityContextHolder.getContext().getAuthentication().getName());
         keycloakAdminService.setUserGroup(userId, groupId);
     }
 
@@ -69,6 +74,8 @@ public class AdminController {
      */
     @PostMapping("/users/{userId}/activator")
     public void onChangeEnableStatus(@PathVariable("userId") String userId, @RequestBody boolean activate) {
+        log.info("Изменение статуса пользователю {} на {} пользователем {}", userId, activate,
+                SecurityContextHolder.getContext().getAuthentication().getName());
         keycloakAdminService.onChangeEnableStatus(userId, activate);
     }
 }

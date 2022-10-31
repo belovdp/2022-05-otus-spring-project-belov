@@ -153,8 +153,11 @@ export default class ProductView extends Vue {
     private async onSave() {
         const categories = this.$refs.tree.getCheckedNodes(false, true).map(item => item.id);
         const savedProduct = await this.productService.saveProduct({...this.product, categories});
-        await this.loadProduct();
         Notification.success("Продукт сохранен");
+        if (this.product.id) {
+            await this.loadProduct();
+            return;
+        }
         await this.$router.push({
             name: "ProductView",
             params: {id: String(savedProduct.id)}

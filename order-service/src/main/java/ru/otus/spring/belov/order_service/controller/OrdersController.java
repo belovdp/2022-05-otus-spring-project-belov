@@ -2,8 +2,10 @@ package ru.otus.spring.belov.order_service.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.belov.order_service.dto.order.CreateOrderRequest;
 import ru.otus.spring.belov.order_service.dto.order.OrderDto;
@@ -13,6 +15,7 @@ import ru.otus.spring.belov.order_service.service.OrderService;
 /**
  * Контроллер для работы с заказами
  */
+@Slf4j
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -47,6 +50,7 @@ public class OrdersController {
      */
     @PostMapping("/")
     public OrderDto save(@RequestBody CreateOrderRequest createOrderRequest) {
+        log.info("Создание заказа пользователем {}", SecurityContextHolder.getContext().getAuthentication().getName());
         return userOrderService.create(createOrderRequest);
     }
 }
