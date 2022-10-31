@@ -5,6 +5,7 @@ import PageableTable, {SpringPageable, TableData} from "@/ts/components/common/P
 import {ProductItem, ProductService} from "@/ts/services/ProductService";
 import {booleanFormatter, rubFormatter} from "@/ts/utils/formatters";
 import {Notification} from "element-ui";
+import {FileService} from "@/ts/services/FileService";
 
 @Component({
     template: `
@@ -29,13 +30,20 @@ import {Notification} from "element-ui";
                 width="55">
             </el-table-column>
             <el-table-column prop="id" label="ID" width="100" sortable="custom"></el-table-column>
+            <el-table-column
+                label="Изображение"
+                width="200">
+              <template slot-scope="scope">
+                <el-image :src="getPreview(scope.row.id)" fit="cover"></el-image>
+              </template>
+            </el-table-column>
             <el-table-column prop="title" label="Название" sortable="custom"></el-table-column>
             <el-table-column prop="price" align="right" label="Цена" :formatter="rubFormatter" sortable="custom"></el-table-column>
             <el-table-column prop="published" label="Опубликован" :formatter="booleanFormatter" sortable="custom"></el-table-column>
             <el-table-column prop="sortIndex" label="Порядок вывода" sortable="custom"></el-table-column>
             <el-table-column
                 label="Действия"
-                width="320">
+                width="220">
                 <template slot-scope="scope">
                   <el-button type="text" size="small" @click="onEdit(scope.row.id)">Редактировать</el-button>
                 </template>
@@ -55,6 +63,8 @@ export default class ProductList extends Vue {
 
     /** Сервис по работе с продуктами */
     @Inject private readonly productService: ProductService;
+    /** Сервис по работе с файлами */
+    @Inject private readonly fileService: FileService;
 
     /** Идентификатор категории */
     @Prop()
@@ -87,5 +97,9 @@ export default class ProductList extends Vue {
             name: "ProductView",
             params: {id}
         });
+    }
+
+    private getPreview(id: number) {
+        return this.fileService.getPreviewUrl(id);
     }
 }

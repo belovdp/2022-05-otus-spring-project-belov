@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface FileInfoRepository extends JpaRepository<FileInfo, UUID> {
 
     List<FileInfo> findAllByEntityCategoryAndEntityId(EntityCategory entityCategory, Long entityId);
+
+    void deleteAllByEntityCategoryAndEntityId(EntityCategory entityCategory, Long entityId);
 }

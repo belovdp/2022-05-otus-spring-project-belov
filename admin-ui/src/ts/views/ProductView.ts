@@ -8,6 +8,8 @@ import {ElTree, TreeData} from "element-ui/types/tree";
 import {CategoryTreeItem} from "@/ts/services/CategoryService";
 import store from "@/ts/config/store";
 import {TreeUtils} from "@/ts/utils/TreeUtils";
+import "@/js/env.js";
+import Gallery from "@/ts/components/Gallery";
 
 @Component({
     template: `
@@ -39,44 +41,53 @@ import {TreeUtils} from "@/ts/utils/TreeUtils";
                      @click="onDelete"></el-button>
         </el-button-group>
       </toolbar>
-      <el-form v-if="product"
-               label-position="top"
-               label-width="100px"
-               :model="product"
-               :disabled="!$store.getters.hasEditRights">
-        <el-form-item label="Заголовок">
-          <el-input v-model="product.title"></el-input>
-        </el-form-item>
-        <el-form-item label="Описание">
-          <el-input type="textarea"
-              :autosize="{ minRows: 8, maxRows: 16 }"
-              v-model="product.description">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="Цена">
-          <el-input-number v-model="product.price" :min="0" step="100"></el-input-number>
-        </el-form-item>
-        <el-form-item>
-          <el-checkbox label="Опубликован" v-model="product.published" name="type"></el-checkbox>
-        </el-form-item>
-        <el-form-item label="Порядок сортировки">
-          <el-input-number v-model="product.sortIndex"></el-input-number>
-        </el-form-item>
-        <el-form-item label="Категории">
-          <el-tree ref="tree"
-                   :data="catTree"
-                   show-checkbox
-                   node-key="id"
-                   :render-after-expand="false"
-                   :default-checked-keys="selectedLeafs"
-                   :default-expanded-keys="product.categories"
-                   :props="treeProps"></el-tree>
-        </el-form-item>
-      </el-form>
+      <el-tabs value="info">
+        <el-tab-pane label="Информация" name="info">
+
+          <el-form v-if="product"
+                   label-position="top"
+                   label-width="100px"
+                   :model="product"
+                   :disabled="!$store.getters.hasEditRights">
+            <el-form-item label="Заголовок">
+              <el-input v-model="product.title"></el-input>
+            </el-form-item>
+            <el-form-item label="Описание">
+              <el-input type="textarea"
+                        :autosize="{ minRows: 8, maxRows: 16 }"
+                        v-model="product.description">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="Цена">
+              <el-input-number v-model="product.price" :min="0" :step="100"></el-input-number>
+            </el-form-item>
+            <el-form-item>
+              <el-checkbox label="Опубликован" v-model="product.published" name="type"></el-checkbox>
+            </el-form-item>
+            <el-form-item label="Порядок сортировки">
+              <el-input-number v-model="product.sortIndex"></el-input-number>
+            </el-form-item>
+            <el-form-item label="Категории">
+              <el-tree ref="tree"
+                       :data="catTree"
+                       show-checkbox
+                       node-key="id"
+                       :render-after-expand="false"
+                       :default-checked-keys="selectedLeafs"
+                       :default-expanded-keys="product.categories"
+                       :props="treeProps"></el-tree>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane v-if="product.id" label="Галерея" name="gallery">
+          <gallery :product-id="product.id"/>
+        </el-tab-pane>
+      </el-tabs>
       </div>
     `,
     components: {
-        Toolbar
+        Toolbar,
+        Gallery
     }
 })
 export default class ProductView extends Vue {
@@ -146,7 +157,7 @@ export default class ProductView extends Vue {
         Notification.success("Продукт сохранен");
         await this.$router.push({
             name: "ProductView",
-            params: { id: String(savedProduct.id) }
+            params: {id: String(savedProduct.id)}
         });
     }
 

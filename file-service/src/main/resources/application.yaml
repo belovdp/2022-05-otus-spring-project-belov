@@ -32,7 +32,8 @@ server:
   port: 8088
 
 file-service:
-  dir: "./file-service/demo/"
+  dir: "./file-service/demo"
+  no-image: ${file-service.dir}/no_image.jpg
 
 eureka:
   client:

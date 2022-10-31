@@ -20,14 +20,14 @@ public class FilesController {
     private final FilesService filesService;
 
     /**
-     * Возвращает файл по идентификатору
+     * Возвращает файл по идентификатору сущности и типу сущности
      * @param entityCategory бизнес сущность к которой достаём файлы
      * @param entityId       идентификатор бизнес сущности
      * @return идентификаторы файлов
      */
     @GetMapping("/{entityCategory}/{entityId}")
-    public List<String> findFilesId(@PathVariable EntityCategory entityCategory,
-                                    @PathVariable Long entityId) {
+    public List<UUID> getFilesId(@PathVariable EntityCategory entityCategory,
+                                 @PathVariable Long entityId) {
         return filesService.findFiles(entityCategory, entityId);
     }
 
@@ -39,8 +39,8 @@ public class FilesController {
      */
     @PostMapping(value = "/{entityCategory}/{entityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FileInfo uploadFiles(@RequestParam(value = "file") MultipartFile file,
-                                      @PathVariable EntityCategory entityCategory,
-                                      @PathVariable Long entityId) {
+                                @PathVariable EntityCategory entityCategory,
+                                @PathVariable Long entityId) {
         return filesService.save(file, entityCategory, entityId);
     }
 
@@ -49,7 +49,7 @@ public class FilesController {
      * @param id идентификатор файла
      */
     @DeleteMapping(value = "/{id}")
-    public void deleteFile(UUID id) {
+    public void deleteFile(@PathVariable UUID id) {
         filesService.delete(id);
     }
 
@@ -67,8 +67,20 @@ public class FilesController {
     /**
      * Возвращает файл
      */
-    @GetMapping(value = "/download/{id}")
+    @GetMapping(value = "/{id}")
     public void getFile(@PathVariable UUID id, HttpServletResponse response) {
-        filesService.loadDocumentAsStream(id, response);
+        filesService.loadFileAsStream(id, response);
+    }
+
+    /**
+     * Возвращает превью файл для сущности
+     * @param entityCategory бизнес сущность к которой достаём файлы
+     * @param entityId       идентификатор бизнес сущности
+     */
+    @GetMapping("/{entityCategory}/{entityId}/preview")
+    public void getPreviewFile(@PathVariable EntityCategory entityCategory,
+                               @PathVariable Long entityId,
+                               HttpServletResponse response) {
+        filesService.loadPreviewAsStream(entityCategory, entityId, response);
     }
 }

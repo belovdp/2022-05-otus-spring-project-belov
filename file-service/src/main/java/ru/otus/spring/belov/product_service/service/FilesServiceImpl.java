@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,13 +29,14 @@ public class FilesServiceImpl implements FilesService {
     private final FileInfoRepository fileInfoRepository;
     @Value("${file-service.dir}")
     private String dir;
+    @Value("${file-service.no-image}")
+    private String noImage;
 
     @Override
-    public List<String> findFiles(EntityCategory entityCategory, Long entityId) {
+    public List<UUID> findFiles(EntityCategory entityCategory, Long entityId) {
         return fileInfoRepository.findAllByEntityCategoryAndEntityId(entityCategory, entityId)
                 .stream()
                 .map(FileInfo::getId)
-                .map(UUID::toString)
                 .toList();
     }
 
@@ -75,30 +75,39 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
+    @Transactional
     @Override
     public void deleteEntityFiles(EntityCategory entityCategory, Long entityId) {
         try {
-            var filesInfo = fileInfoRepository.findAllByEntityCategoryAndEntityId(entityCategory, entityId);
-            for (var fileInfo : filesInfo) {
-                var deleteFile = getFilePath(fileInfo).toFile();
-                if (deleteFile.exists()) {
-                    FileUtils.forceDelete(deleteFile);
-                }
-            }
-            fileInfoRepository.deleteAll(filesInfo);
+            fileInfoRepository.deleteAllByEntityCategoryAndEntityId(entityCategory, entityId);
+            FileUtils.forceDelete(Paths.get(dir, entityCategory.getFilesSubDirectory(), String.valueOf(entityId)).toFile());
         } catch (IOException e) {
             throw new ApplicationException("Ошибка удаления файлов для {} {}", entityCategory, entityId, e);
         }
     }
 
     @Override
-    public void loadDocumentAsStream(UUID id, HttpServletResponse response) {
+    public void loadFileAsStream(UUID id, HttpServletResponse response) {
         var fileInfo = fileInfoRepository.getReferenceById(id);
         File readFile = getFilePath(fileInfo).toFile();
         try (var is = new FileInputStream(readFile)) {
             IOUtils.copy(is, response.getOutputStream());
-            response.setContentType(fileInfo.getContentType());
-            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileInfo.getId() + "\"");
+            response.flushBuffer();
+        } catch (IOException ex) {
+            throw new ApplicationException("Не удалось скачать файл", ex);
+        }
+    }
+
+    @Override
+    public void loadPreviewAsStream(EntityCategory entityCategory, Long entityId, HttpServletResponse response) {
+        File readFile = fileInfoRepository.findAllByEntityCategoryAndEntityId(entityCategory, entityId)
+                .stream()
+                .findFirst()
+                .map(this::getFilePath)
+                .orElse(Paths.get(noImage))
+                .toFile();
+        try (var is = new FileInputStream(readFile)) {
+            IOUtils.copy(is, response.getOutputStream());
             response.flushBuffer();
         } catch (IOException ex) {
             throw new ApplicationException("Не удалось скачать файл", ex);

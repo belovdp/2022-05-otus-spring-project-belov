@@ -19,7 +19,7 @@ public interface FilesService {
      * @param entityId       идентификатор бизнес сущности
      * @return идентификаторы файлов
      */
-    List<String> findFiles(EntityCategory entityCategory, Long entityId);
+    List<UUID> findFiles(EntityCategory entityCategory, Long entityId);
 
     /**
      * Сохраняет файл
@@ -39,5 +39,7 @@ public interface FilesService {
      */
     void deleteEntityFiles(EntityCategory entityCategory, Long entityId);
 
-    void loadDocumentAsStream(UUID id, HttpServletResponse response);
+    void loadFileAsStream(UUID id, HttpServletResponse response);
+
+    void loadPreviewAsStream(EntityCategory entityCategory, Long entityId, HttpServletResponse response);
 }
