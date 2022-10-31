@@ -49,8 +49,10 @@ public class WebSecurityConfiguration {
                 .csrf().disable()
                 .cors().disable()
                 .authorizeRequests(authorizeRequests -> authorizeRequests
-//                        TODO секьюрность прикрутить
-                        .anyRequest().permitAll())
+                        .antMatchers(HttpMethod.DELETE, "/files/**").hasAnyRole("EDITOR", "ADMIN")
+                        .antMatchers(HttpMethod.POST, "/files/**").hasAnyRole("EDITOR", "ADMIN")
+                        .antMatchers("/files/**").permitAll()
+                        .anyRequest().denyAll())
                 .oauth2ResourceServer(resourceServerConfigurer -> resourceServerConfigurer
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))

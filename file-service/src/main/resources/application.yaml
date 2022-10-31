@@ -4,7 +4,7 @@ spring:
   profiles:
     active: ${file-service.project.profile:prod}
   datasource:
-    url: ${products.db.url:jdbc:postgresql://localhost:5433/file_service}
+    url: ${file-service.db.url:jdbc:postgresql://localhost:5433/file_service}
     username: ${file-service.db.username:postgres}
     password: ${file-service.db.password:owner}
     driver-class-name: org.postgresql.Driver
