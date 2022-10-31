@@ -1,5 +1,6 @@
 package ru.otus.spring.belov.product_service.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.MediaType;
@@ -40,6 +41,7 @@ public class FilesController {
      * @param entityCategory бизнес сущность к которой достаём файлы
      * @param entityId       идентификатор бизнес сущности
      */
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping(value = "/{entityCategory}/{entityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FileInfo uploadFiles(@RequestParam(value = "file") MultipartFile file,
                                 @PathVariable EntityCategory entityCategory,
@@ -51,6 +53,7 @@ public class FilesController {
      * Удаляет файл
      * @param id идентификатор файла
      */
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping(value = "/{id}")
     public void deleteFile(@PathVariable UUID id) {
         filesService.delete(id);
@@ -61,6 +64,7 @@ public class FilesController {
      * @param entityCategory бизнес сущность к которой достаём файлы
      * @param entityId       идентификатор бизнес сущности
      */
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{entityCategory}/{entityId}")
     public void deleteEntityFiles(@PathVariable EntityCategory entityCategory,
                                   @PathVariable Long entityId) {
