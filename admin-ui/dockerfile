@@ -10,6 +10,7 @@ FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY /src/js/env.tpl.js /usr/share/nginx/html/js/env.tpl.js
 COPY ./replaceEnvVars.sh /
-RUN chmod +x replaceEnvVars.sh
-ENTRYPOINT ["./replaceEnvVars.sh"]
+RUN dos2unix < replaceEnvVars.sh > entrypoint.sh
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
