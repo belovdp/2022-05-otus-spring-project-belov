@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.otus.spring.belov.product_service.domain.EntityCategory;
 import ru.otus.spring.belov.product_service.domain.FileInfo;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +39,7 @@ public interface FilesService {
      */
     void deleteEntityFiles(EntityCategory entityCategory, Long entityId);
 
-    FileInputStream loadFileAsStream(UUID id);
+    InputStream loadFileAsStream(UUID id);
 
-    FileInputStream loadPreviewAsStream(EntityCategory entityCategory, Long entityId);
+    InputStream loadPreviewAsStream(EntityCategory entityCategory, Long entityId);
 }

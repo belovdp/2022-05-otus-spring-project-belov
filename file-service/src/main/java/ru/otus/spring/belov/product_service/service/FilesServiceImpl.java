@@ -9,7 +9,7 @@ import ru.otus.spring.belov.product_service.domain.EntityCategory;
 import ru.otus.spring.belov.product_service.domain.FileInfo;
 import ru.otus.spring.belov.product_service.repository.FileInfoRepository;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,14 +59,15 @@ public class FilesServiceImpl implements FilesService {
         filesStorageService.deleteEntityFiles(entityCategory, entityId);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public FileInputStream loadFileAsStream(UUID id) {
+    public InputStream loadFileAsStream(UUID id) {
         var fileInfo = fileInfoRepository.getReferenceById(id);
         return filesStorageService.loadFileAsStream(fileInfo.getEntityCategory(), fileInfo.getEntityId(), fileInfo.getId().toString());
     }
 
     @Override
-    public FileInputStream loadPreviewAsStream(EntityCategory entityCategory, Long entityId) {
+    public InputStream loadPreviewAsStream(EntityCategory entityCategory, Long entityId) {
         return fileInfoRepository.findAllByEntityCategoryAndEntityId(entityCategory, entityId)
                 .stream()
                 .findFirst()
