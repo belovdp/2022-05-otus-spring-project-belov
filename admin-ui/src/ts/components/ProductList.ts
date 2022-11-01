@@ -14,7 +14,7 @@ import {FileService} from "@/ts/services/FileService";
             <el-button :disabled="!$store.getters.hasEditRights"
                        type="primary"
                        size="mini"
-                       icon="el-icon-check"
+                       icon="el-icon-plus"
                        round
                        @click="onAdd"></el-button>
             <el-button :disabled="!selected.length || !$store.getters.hasEditRights"
