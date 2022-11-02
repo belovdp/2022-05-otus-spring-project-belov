@@ -11,13 +11,14 @@ import {FileService} from "@/ts/services/FileService";
       <div class="gallery">
       <el-row type="flex" :gutter="5">
         <el-col :span="4" v-for="url in fileUrls" class="image">
-          <el-button type="danger" icon="el-icon-delete" circle class="button" @click="onDelete(url)"></el-button>
+          <el-button v-if="$store.getters.hasEditRights" type="danger" icon="el-icon-delete" circle class="button" @click="onDelete(url)"></el-button>
           <el-image
               :src="url"
               fit="cover"></el-image>
         </el-col>
       </el-row>
       <el-upload
+          v-if="$store.getters.hasEditRights"
           style="width:300px; margin-top: 20px"
           action="/"
           :http-request="uploadImage"

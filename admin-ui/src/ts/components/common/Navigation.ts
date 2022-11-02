@@ -32,7 +32,7 @@ import store from "@/ts/config/store";
           <i class="el-icon-s-goods"></i>
           <span slot="title">Заказы</span>
         </el-menu-item>
-        <el-menu-item index="/users">
+        <el-menu-item index="/users" v-if="$store.getters.hasAdminRights">
           <i class="el-icon-user-solid"></i>
           <span slot="title">Пользователи</span>
         </el-menu-item>
