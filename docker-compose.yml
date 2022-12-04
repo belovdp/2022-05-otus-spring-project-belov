@@ -1,0 +1,187 @@
+version: "3"
+
+services:
+  keycloak-db:
+    image: postgres:13.2
+    container_name: local-keycloak-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: $KC_POSTGRES_DB
+      POSTGRES_USER: $KC_POSTGRES_USER
+      POSTGRES_PASSWORD: $KC_POSTGRES_PASSWORD
+
+  keycloak:
+    depends_on:
+      - keycloak-db
+    image: jboss/keycloak:16.1.1
+    container_name: local-keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak-db
+      DB_DATABASE: $KC_POSTGRES_DB
+      DB_USER: $KC_POSTGRES_USER
+      DB_PASSWORD: $KC_POSTGRES_PASSWORD
+      KEYCLOAK_USER: $KC_USER
+      KEYCLOAK_PASSWORD: $KC_PASSWORD
+      KEYCLOAK_IMPORT: "/tmp/export.json -Dkeycloak.profile.feature.upload_scripts=enabled"
+    volumes:
+      - "$KC_EXPORT_FILE:/tmp/export.json"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    image: belovdp/user-service
+    container_name: user-service
+    restart: always
+    privileged: true
+    depends_on:
+      - keycloak
+      - eureka-service
+    environment:
+      KC_URL: $KC_URL
+      KC_REALM: $KC_REALM
+      KC_CLIENT_ID: $KC_CLIENT_ID
+      KC_SECRET: $KC_SECRET
+      EUREKA_SERVICE_SERVER_PORT: $EUREKA_SERVICE_SERVER_PORT
+      EUREKA_SERVICE_SERVER_HOSTNAME: $EUREKA_SERVICE_SERVER_HOSTNAME
+    ports:
+      - "8081:8081"
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    image: belovdp/product-service
+    container_name: product-service
+    privileged: true
+    depends_on:
+      - keycloak
+      - product-service-db
+      - eureka-service
+    environment:
+      PRODUCTS_PROJECT_PROFILE: $PRODUCTS_PROJECT_PROFILE
+      PRODUCTS_DB_URL: jdbc:postgresql://product-service-db:5432/$PRODUCTS_DB
+      PRODUCTS_DB_USERNAME: $PRODUCTS_DB_USERNAME
+      PRODUCTS_DB_PASSWORD: $PRODUCTS_DB_PASSWORD
+      PRODUCTS_KEYCLOAK_CERT: $KC_CERT
+      EUREKA_SERVICE_SERVER_PORT: $EUREKA_SERVICE_SERVER_PORT
+      EUREKA_SERVICE_SERVER_HOSTNAME: $EUREKA_SERVICE_SERVER_HOSTNAME
+    ports:
+      - "8082:8082"
+
+  product-service-db:
+    image: postgres:13.2
+    restart: unless-stopped
+    container_name: product-service-db
+    environment:
+      POSTGRES_DB: $PRODUCTS_DB
+      POSTGRES_USER: $PRODUCTS_DB_USERNAME
+      POSTGRES_PASSWORD: $PRODUCTS_DB_PASSWORD
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    image: belovdp/order-service
+    container_name: order-service
+    privileged: true
+    depends_on:
+      - keycloak
+      - order-service-db
+      - eureka-service
+    environment:
+      ORDERS_PROJECT_PROFILE: $PRODUCTS_PROJECT_PROFILE
+      ORDERS_DB_URL: jdbc:postgresql://order-service-db:5432/$ORDERS_DB
+      ORDERS_DB_USERNAME: $ORDERS_DB_USERNAME
+      ORDERS_DB_PASSWORD: $ORDERS_DB_PASSWORD
+      ORDERS_KEYCLOAK_CERT: $KC_CERT
+      EUREKA_SERVICE_SERVER_PORT: $EUREKA_SERVICE_SERVER_PORT
+      EUREKA_SERVICE_SERVER_HOSTNAME: $EUREKA_SERVICE_SERVER_HOSTNAME
+    ports:
+      - "8087:8087"
+
+  order-service-db:
+    image: postgres:13.2
+    restart: unless-stopped
+    container_name: order-service-db
+    environment:
+      POSTGRES_DB: $ORDERS_DB
+      POSTGRES_USER: $ORDERS_DB_USERNAME
+      POSTGRES_PASSWORD: $ORDERS_DB_PASSWORD
+
+  file-service:
+    build:
+      context: ./file-service
+      dockerfile: Dockerfile
+    image: belovdp/file-service
+    container_name: file-service
+    privileged: true
+    depends_on:
+      - keycloak
+      - file-service-db
+      - eureka-service
+    environment:
+      FILE_SERVICE_PROJECT_PROFILE: $PRODUCTS_PROJECT_PROFILE
+      FILE_SERVICE_DB_URL: jdbc:postgresql://file-service-db:5432/$FILE_SERVICE_DB
+      FILE_SERVICE_DB_USERNAME: $FILE_SERVICE_DB_USERNAME
+      FILE_SERVICE_DB_PASSWORD: $FILE_SERVICE_DB_PASSWORD
+      FILE_SERVICE_KEYCLOAK_CERT: $KC_CERT
+      EUREKA_SERVICE_SERVER_PORT: $EUREKA_SERVICE_SERVER_PORT
+      EUREKA_SERVICE_SERVER_HOSTNAME: $EUREKA_SERVICE_SERVER_HOSTNAME
+      FILE_SERVICE_DIR: $FILE_SERVICE_DIR
+    volumes:
+      - "./file-service/demo:$FILE_SERVICE_DIR"
+    ports:
+      - "8088:8088"
+
+  file-service-db:
+    image: postgres:13.2
+    restart: unless-stopped
+    container_name: file-service-db
+    environment:
+      POSTGRES_DB: $FILE_SERVICE_DB
+      POSTGRES_USER: $FILE_SERVICE_DB_USERNAME
+      POSTGRES_PASSWORD: $FILE_SERVICE_DB_PASSWORD
+
+  eureka-service:
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    image: belovdp/eureka-service
+    container_name: eureka-service
+    privileged: true
+    environment:
+      EUREKA_SERVICE_SERVER_HOSTNAME: localhost
+    ports:
+      - "8084:8084"
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    image: belovdp/gateway-service
+    container_name: gateway-service
+    privileged: true
+    environment:
+      EUREKA_SERVICE_SERVER_PORT: $EUREKA_SERVICE_SERVER_PORT
+      EUREKA_SERVICE_SERVER_HOSTNAME: $EUREKA_SERVICE_SERVER_HOSTNAME
+      GATEWAY_CORS: http://localhost:8085
+    ports:
+      - "8086:8086"
+
+  admin-ui:
+    build:
+      context: ./admin-ui
+      dockerfile: Dockerfile
+    image: belovdp/admin-ui
+    container_name: admin-ui
+    privileged: true
+    environment:
+      GATEWAY_URL: http://localhost:8086
+      KC_CLIENT: $KC_CLIENT_ID
+    ports:
+      - "8085:80"

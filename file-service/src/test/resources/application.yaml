@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: file-service
+  datasource:
+    url: test-db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:liquibase/main.xml
+    contexts: demo
+    drop-first: false
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+  data:
+    rest:
+      basePath: /
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/auth/realms/shop/protocol/openid-connect/certs
+server:
+  port: 8088
+
+file-service:
+  dir: "./target/demo"
+  no-image: ${file-service.dir}/no_image.jpg
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,logfile
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: true
